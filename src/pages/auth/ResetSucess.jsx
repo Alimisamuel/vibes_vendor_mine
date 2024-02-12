@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import backgroundImage from "../../assets/img/1.png";
 import logo from "../../assets/logo/logo.svg";
 import { Backdrop, Box, Button, Typography } from "@mui/material";
-import imgsvg from "../../assets/icons/signup.svg";
+import imgsvg from "../../assets/icons/reset.svg";
+import imgsvg2 from "../../assets/icons/signup.svg";
 import Loader from "../../components/common/Loader";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 
-const SignUpSuccess = () => {
+const ResetSuccess = () => {
   const [open, setopen] = useState(false);
   const navigate = useNavigate()
-
+const {variant} = useParams()
 
 
   const handleLogin = async () =>{
     navigate("/")
   }
+
+  const isSuccess = variant === "success"
   
   return (
     <>
@@ -48,27 +51,36 @@ const SignUpSuccess = () => {
             }}
           >
             <Box>
-              <img src={imgsvg} />
+              <img src={isSuccess ? imgsvg2 : imgsvg} />
             </Box>
 
             <Typography variant="h2" sx={{ mt: 4 }}>
-              Setup Complete
+            {isSuccess ? "Password Successfully Updated!" : "Password Reset Done!"}
             </Typography>
-            <Typography variant="body1" sx={{ mt: 2, textAlign: "center" }}>
-              You can now start accepting reservations from VibezsUp users at
-              <br /> your fine establishment.
-            </Typography>
+            {
+                isSuccess ? (
+                    <Typography variant="body1" sx={{ mt: 2, textAlign: "center" }}>Proceed to Login page to access your account</Typography>
+                ):(
+                    <Typography variant="body1" sx={{ mt: 2, textAlign: "center" }}>
+                    Kindly check your email for a password reset link to setup a new 
+                      <br /> password for your profile..
+                    </Typography>
+                )
+            }
+          
 
             <Box sx={{ mt: 5 }}>
+                <Link to="/login">
               <Button
               onClick={handleLogin}
                 variant="contained"
                 sx={{ height: "63px", width: "300px", borderRadius: "10px" }}
               >
-                Continue to Dashboard
+              {isSuccess ? 'Login' : "Back to Login Page"}
               </Button>
+              </Link>
             </Box>
-            <Box sx={{ mt: 5 }}>
+            <Box sx={{ mt: 8 }}>
               <img src={logo} />
             </Box>
           </Box>
@@ -96,4 +108,4 @@ const SignUpSuccess = () => {
   );
 };
 
-export default SignUpSuccess;
+export default ResetSuccess;

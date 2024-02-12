@@ -1,13 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthLayout from "./AuthLayout";
 import { Box, Typography, Button } from "@mui/material";
 import CustomInput from "../../components/Custom/CustomInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { forgotPassword } from "../../api";
+import Loader from "../../components/common/Loader";
 
 const Reset = () => {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const handleForgotPassword = async () => {
+    setLoading(true);
+    await forgotPassword(email)
+      .then((res) => {
+        setLoading(false);
+        console.log(res);
+        if(res?.data?.status){
+          navigate("/reset/done")
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    setEmail(value);
+    setError(!validateEmail(value));
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
   return (
     <>
       <AuthLayout>
+        {loading && <Loader />}
         <Box sx={{ width: "70%" }}>
           <Typography
             sx={{
@@ -19,12 +52,22 @@ const Reset = () => {
           >
             Password Reset
           </Typography>
+
           <Typography variant="body1" sx={{ mt: 3 }}>
             Enter your VibezsUp Vendor Registered email
           </Typography>
           <Box sx={{ mt: 5 }}>
-            <Typography variant="body1">Email</Typography>
+            {error ? (
+              <Typography variant="body1" sx={{ color: "#EA8072" }}>
+                Email (Invalid Email)
+              </Typography>
+            ) : (
+              <Typography variant="body1">Email</Typography>
+            )}
             <CustomInput
+              error={error}
+              value={email}
+              onChange={handleInputChange}
               margin="dense"
               fullWidth
               placeholder="Enter your registered email"
@@ -33,6 +76,7 @@ const Reset = () => {
         </Box>
         <Box sx={{ mt: 4 }}>
           <Button
+            onClick={handleForgotPassword}
             variant="contained"
             sx={{ height: "63px", width: "300px", borderRadius: "10px" }}
           >

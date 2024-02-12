@@ -5,7 +5,7 @@ const CustomOtp = ({otp, handleChange, error}) => {
 
   return (
    <>
-   <MuiOtpInput value={otp} onChange={handleChange} length={6} TextFieldsProps={{type:'password',   inputProps: {
+   <MuiOtpInput value={otp} onChange={handleChange} length={6} TextFieldsProps={{type:'number',   inputProps: {
     style:{
         border:error ? "2px solid #EA8072": "1.5px solid #fff",
         borderRadius: "10px",

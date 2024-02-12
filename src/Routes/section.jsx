@@ -3,8 +3,9 @@ import { lazy, Suspense } from 'react';
 
 // import { Dashboard, SharedLayouts } from "../pages/dashboard";
 import { DashboardLayout } from "../Layouts";
-import { Reset, Login, Signup } from "../pages/auth";
+import { Reset, Login, Signup, ResetPassword } from "../pages/auth";
 import SignUpSuccess from "../pages/auth/SignUpSuccess";
+import ResetSuccess from "../pages/auth/ResetSucess";
 import ProtectedRoute from "./ProtectedRoute";
 
 
@@ -53,16 +54,24 @@ export default function Routes() {
       element: <Login />,
     },
     {
-      path: "/reset-password",
+      path: "/forget-password",
       element: <Reset />,
     },
     {
-      path: "/signup",
+      path: "/reset-password",
+      element: <ResetPassword />,
+    },
+    {
+      path: "/signup/:id",
       element: <Signup />,
     },
     {
         path:'/signed-up',
         element:<SignUpSuccess/>
+    },
+    {
+        path:'/reset/:variant',
+        element:<ResetSuccess/>
     }
   ]);
 

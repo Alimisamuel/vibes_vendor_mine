@@ -38,8 +38,26 @@ const apiClient = axios.create({
     }
     return apiClient.post('/merchant/login', payload)
   }
+  const onboarding = (id, password, password_confirmation) =>{
+    const payload = {
+      password,
+      password_confirmation
+    }
+    console.log(id)
+    return apiClient.post(`/merchant/signup/${id}`, payload)
+  }
 
+  const onboardingDetails = (token) => {
+    return apiClient.get(`/merchant/onboarding-details/?token=${token}`)
+  } 
+
+  const forgotPassword = (email) =>{
+    return apiClient.post("/merchant/forgot-password", {email})
+  }
 
   export {
-    login
+    login,
+    onboarding,
+    onboardingDetails,
+    forgotPassword,
   }
