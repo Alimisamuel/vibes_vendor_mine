@@ -58,7 +58,7 @@ export default function Routes() {
       element: <Reset />,
     },
     {
-      path: "/reset-password",
+      path: "/reset-password/:id/:token",
       element: <ResetPassword />,
     },
     {
