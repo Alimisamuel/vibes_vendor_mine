@@ -8,6 +8,7 @@ import SignUpSuccess from "../pages/auth/SignUpSuccess";
 import ResetSuccess from "../pages/auth/ResetSucess";
 import ProtectedRoute from "./ProtectedRoute";
 import TeamLogin from "../pages/auth/TeamLogin";
+import NotFound from "../pages/NotFound";
 
 
 export const IndexPage = lazy(()=>import ('../pages/dashboard/Dashboard'));
@@ -77,6 +78,10 @@ export default function Routes() {
     {
       path:'/login/team',
       element:<TeamLogin/>
+    },
+    {
+      path:'*',
+      element:<NotFound/>
     }
   ]);
 
