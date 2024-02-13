@@ -7,6 +7,7 @@ import { Reset, Login, Signup, ResetPassword } from "../pages/auth";
 import SignUpSuccess from "../pages/auth/SignUpSuccess";
 import ResetSuccess from "../pages/auth/ResetSucess";
 import ProtectedRoute from "./ProtectedRoute";
+import TeamLogin from "../pages/auth/TeamLogin";
 
 
 export const IndexPage = lazy(()=>import ('../pages/dashboard/Dashboard'));
@@ -72,6 +73,10 @@ export default function Routes() {
     {
         path:'/reset/:variant',
         element:<ResetSuccess/>
+    },
+    {
+      path:'/login/team',
+      element:<TeamLogin/>
     }
   ]);
 
