@@ -55,9 +55,18 @@ const apiClient = axios.create({
     return apiClient.post("/merchant/forgot-password", {email})
   }
 
+  const resetPassword = (id, password, password_confirmation) =>{
+
+    const payload = {
+     password, password_confirmation
+    }
+    return apiClient.post(`/merchant/reset-password/${id}`, payload)
+  }
+
   export {
     login,
     onboarding,
     onboardingDetails,
     forgotPassword,
+    resetPassword,
   }

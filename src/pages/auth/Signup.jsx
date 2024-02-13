@@ -32,6 +32,11 @@ const Signup = () => {
 
   const handleConfirmPasswordChange = (newValue) => {
     setConfirmPassword(newValue);
+    if (newValue !== password) {
+      setError(true);
+    } else {
+      setError(false);
+    }
   };
 
   const handleAlert = (message, variant) =>{
@@ -131,9 +136,17 @@ getOnboardingDetails()
             <Box sx={{ mt: 1 }}>
               <CustomOtp otp={password} handleChange={handlePasswordChange} />
             </Box>
-            <Typography variant="body1" sx={{ mt: 3 }}>
+            {
+            error ? (
+              <Typography variant="body1" sx={{ mt: 3, color:'#EA8072' }}>
+              Confirm Password (password must match)
+            </Typography>
+            ):(
+              <Typography variant="body1" sx={{ mt: 3 }}>
               Confirm six (6) digit Password
             </Typography>
+            )
+          }
             <Box sx={{ mt: 1 }}>
               <CustomOtp
                 otp={confirmPassword}

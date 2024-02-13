@@ -122,7 +122,7 @@ error={error}
             </Button>
           </Box>
           <Box sx={{ mt: 3 }}>
-            <Link to="/reset-password">
+            <Link to="/forget-password">
               <Typography
                 variant="body1"
                 sx={{ color: "#F489FD", textDecoration: "underline" }}

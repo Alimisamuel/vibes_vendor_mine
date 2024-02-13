@@ -54,11 +54,11 @@ export default function Routes() {
       element: <Login />,
     },
     {
-      path: "/forget-password",
+      path: "/forgot-password",
       element: <Reset />,
     },
     {
-      path: "/reset-password/:id/:token",
+      path: "/reset-password/:id",
       element: <ResetPassword />,
     },
     {
