@@ -38,6 +38,12 @@ const apiClient = axios.create({
     }
     return apiClient.post('/merchant/login', payload)
   }
+  const team_login = (email, password) =>{
+    const payload ={
+        email, password
+    }
+    return apiClient.post('/merchant/team/login', payload)
+  }
   const onboarding = (id, password, password_confirmation) =>{
     const payload = {
       password,
@@ -63,8 +69,11 @@ const apiClient = axios.create({
     return apiClient.post(`/merchant/reset-password/${id}`, payload)
   }
 
+  
+
   export {
     login,
+    team_login,
     onboarding,
     onboardingDetails,
     forgotPassword,
