@@ -1,24 +1,36 @@
-import React from 'react';
-import { MuiOtpInput } from 'mui-one-time-password-input'
+import React from "react";
+import { MuiOtpInput } from "mui-one-time-password-input";
 
-const CustomOtp = ({otp, handleChange, error}) => {
-
+const CustomOtp = ({ otp, handleChange, error, light }) => {
   return (
-   <>
-   <MuiOtpInput value={otp} onChange={handleChange} length={6} TextFieldsProps={{type:'number',   inputProps: {
-    style:{
-        border:error ? "2px solid #EA8072": "1.5px solid #fff",
-        borderRadius: "10px",
-        color: "#fff",
-        fontFamily: "outfit",width:'30px', height:'38px',
-   fontSize:'18px'
-    }
-    
-    },
-   
-    size: 'small', border:'1px solid #fff' }} />
-   </>
-  )
-}
+    <>
+      <MuiOtpInput
+        style={{ borderRadius: "10px" }}
+        value={otp}
+        onChange={handleChange}
+        length={6}
+        TextFieldsProps={{
+          type: "password",
+          inputProps: {
+            style: {
+              border: error
+                ? `2px solid #EA8072`
+                : `1.5px solid ${light ? "#151515" : "#fff "}`,
+              borderRadius: "10px",
+              color: light ? "#151515" : "#fff",
+              fontFamily: "outfit",
+              width: "30px",
+              height: "38px",
+              fontSize: "18px",
+            },
+          },
 
-export default CustomOtp
+          size: "small",
+          border: "1px solid #fff",
+        }}
+      />
+    </>
+  );
+};
+
+export default CustomOtp;

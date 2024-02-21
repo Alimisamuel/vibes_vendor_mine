@@ -12,7 +12,8 @@ export function DashboardLayout({children}){
           minHeight: 1,
           display: 'flex',
           flexDirection: {  lg: 'row' },
-          bgcolor:'#F4F4F4'
+          bgcolor:'#F4F4F4',
+
         }}>
             <Nav/>
             <Main>{children}</Main>

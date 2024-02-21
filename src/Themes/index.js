@@ -47,6 +47,13 @@ const Theme = createTheme({
         fontWeight: 400,
         fontFamily: "outfit", 
       
+
+    },
+    subtitle1:{
+      fontSize: "13px",
+      color: "#151515",
+      fontWeight: 500,
+      fontFamily: "outfit",
     },
     subtitle2:{
         fontSize: "12px",
@@ -57,9 +64,7 @@ const Theme = createTheme({
     button:{
         textTransform:'initial',
         fontFamily:'outfit',
-        '&:hover':{
-          border:'5px solid red'
-        }
+     
     }
   },
 
