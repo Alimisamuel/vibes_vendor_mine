@@ -60,7 +60,7 @@ export default function Routes() {
         },
         {
        
-          element: <Profile />,
+          element:<ProtectedRoute> <Profile /></ProtectedRoute>,
           children:[
             {
               path:'profile',

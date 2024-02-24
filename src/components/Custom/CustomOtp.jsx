@@ -1,7 +1,7 @@
 import React from "react";
 import { MuiOtpInput } from "mui-one-time-password-input";
 
-const CustomOtp = ({ otp, handleChange, error, light }) => {
+const CustomOtp = ({ otp, handleChange, error, light , type}) => {
   return (
     <>
       <MuiOtpInput
@@ -10,7 +10,7 @@ const CustomOtp = ({ otp, handleChange, error, light }) => {
         onChange={handleChange}
         length={6}
         TextFieldsProps={{
-          type: "password",
+          type: type=== true ? "password" : "number",
           inputProps: {
             style: {
               border: error

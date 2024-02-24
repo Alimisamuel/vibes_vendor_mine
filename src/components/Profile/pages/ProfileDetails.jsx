@@ -21,12 +21,26 @@ import Loader from "../../common/Loader";
 import Info from "../../common/Info";
 import delIcon from "../../../assets/icons/del.svg";
 import gallery from "../../../assets/icons/gallery.svg";
+import TagConfig from "../../../assets/Data/TagConfig";
 
 const ProfileDetails = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [instaLink, setInstaLink] = useState("");
   const [maxGuest, setMaxGuest] = useState(0);
+  const [selectedTags, setSelectedTags] = useState([]);
+
+   const handleTagSelection = (title) => {
+    // Check if the item is already selected
+    const isSelected = selectedTags.includes(title);
+
+    // If selected, remove it from the array, otherwise add it
+    if (isSelected) {
+      setSelectedTags(selectedTags.filter(itemId => itemId !== title));
+    } else {
+      setSelectedTags([...selectedTags, title]);
+    }
+  };
 
   useEffect(() => {
     setInstaLink(data?.instagram_link);
@@ -341,10 +355,10 @@ const ProfileDetails = () => {
                 </Grid>
               ))}
 
-              <Grid item  md="120px">
+              <Grid item md="120px">
                 <Box
                   sx={{
-                  cursor:'pointer',
+                    cursor: "pointer",
                     border: "1px dashed #75007E",
                     borderSpacing: "40px",
                     borderRadius: 1,
@@ -371,7 +385,8 @@ const ProfileDetails = () => {
                         color: "#8f8f8f",
                         textAlign: "center",
                         fontSize: "10px",
-                        fontWeight:300, mt:1
+                        fontWeight: 300,
+                        mt: 1,
                       }}
                     >
                       Click to add image
@@ -381,7 +396,56 @@ const ProfileDetails = () => {
               </Grid>
             </Grid>
           </Box>
-                   <Box sx={{ borderBottom: "1px solid #8f8f8f", my: 4 }} />
+          <Box sx={{ borderBottom: "1px solid #8f8f8f", my: 4 }} />
+          <Box>
+            <Typography variant="subtitle1">
+              Tags
+              <Info content="Enhance your visibility by choosing tags that best describe your establishment. This ensures that potential guests can easily find you on the VibezsUp App." />
+            </Typography>
+            <Box sx={{ mt: 2 }}>
+              <Grid container spacing={2}>
+                {TagConfig.map((tag, index) => {
+    const isSelected = selectedTags.includes(tag.title);
+                  return(
+                  <Grid item md="93px"key={index}>
+                    <Box
+                    onClick={()=>handleTagSelection(tag.title)}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "93px",
+                        height: "93px",
+                        border: "1.35px solid #f4f4f4",
+                        borderRadius: 3,
+                        boxSizing: "border-box",
+                        cursor: "pointer",
+                        transition: "0.2s all linear",
+                        "&:hover": {
+                          border: "2px solid #75007E",
+                          // bgcolor:'#FCEDFE'
+                        },
+                     ...(
+                      isSelected && {
+                                 border: "1.35px solid #75007E",
+                          bgcolor:'#FCEDFE'
+                      }
+                     )
+                      }}
+                    >
+                      <img src={isSelected ? tag.activeIcon : tag.icon} />
+                      <Typography
+                        sx={{ fontSize: "12px", color:isSelected ? "#75007E": "#8f8f8f", mt: 1 }}
+                      >
+                        {tag.title}
+                      </Typography>
+                    </Box>
+                  </Grid>)
+                })}
+              </Grid>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </>
@@ -404,29 +468,30 @@ const ImageCard = ({ image }) => {
           boxSizing: "border-box",
         }}
       >
-        {
-         !image ?(
-<Skeleton animation="wave" variant="sqare" sx={{height:'100%', width:'100%'}}/>
-          ) :(
-    <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            borderRadius: "4px",
-            background: `url('${image}')`,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-          }}
-        >
-          <IconButton sx={{ mt: -4, ml: 12 }}>
-            {" "}
-            <img src={delIcon} />
-          </IconButton>
-        </Box>
-          )
-        }
-    
+        {!image ? (
+          <Skeleton
+            animation="wave"
+            variant="sqare"
+            sx={{ height: "100%", width: "100%" }}
+          />
+        ) : (
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "4px",
+              background: `url('${image}')`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          >
+            <IconButton sx={{ mt: -4, ml: 12 }}>
+              {" "}
+              <img src={delIcon} />
+            </IconButton>
+          </Box>
+        )}
       </Box>
     </>
   );

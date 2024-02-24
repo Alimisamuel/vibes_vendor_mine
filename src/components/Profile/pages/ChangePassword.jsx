@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import CustomOtp from "../../Custom/CustomOtp";
-import { Box, Button, InputLabel, Typography } from "@mui/material";
+import { Box, Button, IconButton, InputLabel, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import passwordicon from "../../../assets/icons/password.svg";
 import { Link } from "react-router-dom";
+import { changePassword } from "../../../api";
+import { useSnackbar } from "notistack";
+import { FaRegEye } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa";
+import Loader from "../../common/Loader";
 
 const style = {
   position: "absolute",
@@ -18,31 +23,94 @@ const style = {
 };
 
 const ChangePassword = () => {
-  const [otp, setOtp] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { enqueueSnackbar } = useSnackbar();
+  const [confrirmPassword, setConfirmPassword] = React.useState("");
+  const [error, setError] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [loading, setLoading] = useState(false)
   const handleChange = (newValue) => {
     // setError(false);
-    setOtp(newValue);
+    setPassword(newValue);
+  };
+  const handleChange2 = (newValue) => {
+    setConfirmPassword(newValue);
+    if (newValue !== password) {
+      setError(true);
+    } else {
+      setError(false);
+    }
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleAlert = (message, variant) => {
+    enqueueSnackbar(message, { variant });
+  };
+
+  const handleChangePassword = async () => {
+    setLoading(true)
+    await changePassword(password, confrirmPassword)
+      .then((res) => {
+        setLoading(false);
+        if(res?.data?.status){
+       
+  setOpen(true)
+        }
+        console.log(res);
+      
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+            handleAlert(`${err.message}`, "error")
+      });
+  };
+
   return (
     <>
+    {
+      loading && <Loader/>
+    }
       <Box>
         <InputLabel sx={{ color: "#151515", mb: 1 }}>
           Enter new six (6) digit Password
         </InputLabel>
-        <Box>
-          <CustomOtp light={true} otp={otp} handleChange={handleChange} />
+        <Box sx={{ display: "flex", alignItems: "center", columnGap: 2 }}>
+          <CustomOtp
+            light={true}
+            otp={password}
+            handleChange={handleChange}
+            type={visible}
+          />
+          <IconButton onClick={() => setVisible(!visible)}>
+            {visible ? (
+              <FaRegEyeSlash style={{ color: "#151515", fontSize: "16px" }} />
+            ) : (
+              <FaRegEye style={{ color: "#151515", fontSize: "16px" }} />
+            )}
+          </IconButton>
         </Box>
-        <InputLabel sx={{ color: "#151515", mb: 1, mt: 5 }}>
-          Confirm six (6) digit Password
-        </InputLabel>
-        <CustomOtp light={true} />
+        {error ? (
+          <Typography variant="body1" sx={{ mt: 3, color: "#EA8072" }}>
+            Confirm Password (password must match)
+          </Typography>
+        ) : (
+          <Typography variant="body1" sx={{ mt: 3, color: "#151515" }}>
+            Confirm six (6) digit Password
+          </Typography>
+        )}
+        <CustomOtp
+          light={true}
+          otp={confrirmPassword}
+          handleChange={handleChange2}
+          type={visible}
+        />
 
         <Box sx={{ mt: 5 }}>
           <Button
-            onClick={handleOpen}
+            onClick={handleChangePassword}
             // disabled={!otp}
             variant="contained"
             sx={{
@@ -51,6 +119,7 @@ const ChangePassword = () => {
               borderRadius: "10px",
               "&:disabled": { background: "#5b5b5b" },
             }}
+            disabled={error || !password || !confrirmPassword}
           >
             Change Password
           </Button>
@@ -76,7 +145,7 @@ const ChangePassword = () => {
               Your password has been successfully updated. Please login again.
             </Typography>
             <Link to="/login">
-              <Button variant="contained" sx={{ mt: 3, px: 6, py: 1 }}>
+              <Button variant="contained" sx={{ mt: 3, px: 6, py: 1 }} >
                 Login
               </Button>
             </Link>

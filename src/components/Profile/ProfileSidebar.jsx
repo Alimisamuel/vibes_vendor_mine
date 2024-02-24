@@ -5,12 +5,16 @@ import ProfileNavConfig from "./NavConfig";
 import RouterLink from "../../hooks/router-link";
 import { usePathname } from "../../hooks/use-pathname";
 import PropTypes from "prop-types";
+import { UseDispatch, useDispatch } from "react-redux";
+import { logoutUser } from "../../store/userSlice";
 
 
 const ProfileSidebar = () => {
+  const dispatch = useDispatch()
 const navigate = useNavigate()
   const handleLogout = () =>{
 navigate('/login')
+dispatch(logoutUser())
   }
   return (
     <>

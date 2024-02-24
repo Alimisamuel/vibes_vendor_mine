@@ -75,6 +75,14 @@ const apiClient = axios.create({
     return apiClient.get("/merchant/profile")
   }
 
+
+  const changePassword =  (password, password_confirmation )=>{
+const payload = {
+  password,
+  password_confirmation
+}
+return apiClient.post('/merchant/change-password', payload)
+  }
   
 
   export {
@@ -85,4 +93,5 @@ const apiClient = axios.create({
     forgotPassword,
     resetPassword,
     getProflie,
+    changePassword,
   };
