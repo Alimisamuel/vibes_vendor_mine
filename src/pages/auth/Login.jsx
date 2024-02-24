@@ -39,7 +39,7 @@ const Login = () => {
         const {data} = res;
         if(data.status){
           
-          localStorage.setItem("vendorInfo", JSON.stringify(data?.data))
+          localStorage.setItem("vendorInfo", JSON.stringify(data?.data?.token))
           dispatch(setUser(data?.data))
           navigate("/")
         }

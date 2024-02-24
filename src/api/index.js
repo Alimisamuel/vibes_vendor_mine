@@ -11,9 +11,11 @@ const apiClient = axios.create({
   apiClient.interceptors.request.use(
     function (config) {
 
-      const userToken = JSON.parse(window.localStorage.getItem("userInfo"));
+      const userToken = JSON.parse(window.localStorage.getItem("vendorInfo"));
+
+      console.log(userToken)
    
-      config.headers.Authorization = `Bearer ${userToken?.access_token}`;
+      config.headers.Authorization = `Bearer ${userToken}`;
     //   config.headers.apiKey = apiKey;
       // config.headers["Access-Control-Allow-Origin"] = "*";
   
@@ -69,6 +71,10 @@ const apiClient = axios.create({
     return apiClient.post(`/merchant/reset-password/${id}`, payload)
   }
 
+  const getProflie = () =>{
+    return apiClient.get("/merchant/profile")
+  }
+
   
 
   export {
@@ -78,4 +84,5 @@ const apiClient = axios.create({
     onboardingDetails,
     forgotPassword,
     resetPassword,
-  }
+    getProflie,
+  };
