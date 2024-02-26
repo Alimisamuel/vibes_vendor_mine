@@ -52,7 +52,7 @@ const Team = () => {
     await getProflie()
       .then((res) => {
         setIsLoading(false);
-        setData(res?.data?.data?.team_memebers);
+        setData(res?.data?.data?.team_members);
         // console.log(res?.data?.data);
       })
       .catch((err) => {
@@ -167,9 +167,14 @@ const Team = () => {
                   <TableRow key={index}>
                     <TableCell>{team.name}</TableCell>
                     <TableCell>{team?.email}</TableCell>
-                    <TableCell>{team?.login_access_code}</TableCell>
-                    <TableCell>{team?.resv_no}</TableCell>
-                    <TableCell>{team?.inv_no}</TableCell>
+                    <TableCell>{team?.
+access_code}</TableCell>
+                    <TableCell>{team?.
+resv_count
+}</TableCell>
+                    <TableCell>{team?.
+inv_count
+}</TableCell>
 
                     <TableCell align="right">
                       <IconButton onClick={() => handleOpen(team?.id)}>
