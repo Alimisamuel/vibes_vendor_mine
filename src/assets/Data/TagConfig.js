@@ -91,7 +91,7 @@ const TagConfig = [
   {
     icon:img10,
     title:"Rooftop",
-    activeIcon :act1
+    activeIcon :act10
   },
   {
     icon:img11,

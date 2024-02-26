@@ -83,7 +83,28 @@ const payload = {
 }
 return apiClient.post('/merchant/change-password', payload)
   }
+
+  const addTeam = (name, email) =>{
+    const payload ={
+      name, email
+    }
+    return apiClient.post('/merchant/team', payload)
+  }
+
+  const deleteTeam = (id) =>{
+    return apiClient.delete(`/merchant/team/${id}`)
+  }
   
+  const createHouseRules = (title, description)=>{
+const payload = {
+  title, description
+}
+return apiClient.post ('/merchant/create/house-rule', payload)
+  }
+
+    const deleteHouseRules = (id) =>{
+    return apiClient.delete(`/merchant/delete/house-rule/${id}`)
+  }
 
   export {
     login,
@@ -94,4 +115,8 @@ return apiClient.post('/merchant/change-password', payload)
     resetPassword,
     getProflie,
     changePassword,
+    addTeam,
+    deleteTeam,
+    createHouseRules,
+    deleteHouseRules,
   };

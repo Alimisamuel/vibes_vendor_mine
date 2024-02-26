@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -11,16 +11,65 @@ import {
   IconButton,
 } from "@mui/material";
 import cancelIcon from "../../assets/icons/cancel.svg";
+import copyIcon from "../../assets/icons/copy.svg";
 import CustomInput from "../Custom/CustomInput";
+import { addTeam } from "../../api";
+import { useSnackbar } from "notistack";
+import Loader from "../common/Loader";
+import { MdDone } from "react-icons/md";
 
-const AddTeam = () => {
+const AddTeam = ({action}) => {
   const [open, setOpen] = React.useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+  const [created, setCreated] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAlert = (message, variant) => {
+    enqueueSnackbar(message, { variant });
+  };
+
+  const [data, setData] = useState(null);
+
+  const handleAddTeam = async () => {
+    setIsLoading(true);
+    await addTeam(name, email)
+      .then((res) => {
+        console.log(res);
+        const { data } = res;
+        if (data?.status) {
+          setCreated(true);
+          setData(data?.data);
+          action()
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        handleAlert(`${err.message}`, "error");
+      });
+  };
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+
+  const handleCopy = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset copied state after 2 seconds
+      })
+      .catch((err) => console.error("Failed to copy:", err));
+  };
   return (
     <>
+      {isLoading && <Loader />}
       <Button
         variant="outlined"
         sx={{ background: "#FCEDFE", px: 3 }}
@@ -59,46 +108,120 @@ const AddTeam = () => {
           </Box>
 
           <Box sx={{ mt: 5, bgcolor: "#FCEDFE", p: 5, borderRadius: "12px" }}>
-            <InputLabel
-              sx={{ color: "#75007E", fontWeight: 500 }}
-              color="primary"
-            >
-              Employee Name
-            </InputLabel>
-            <TextField
-              fullWidth
-              margin="dense"
-              size="medium"
-              placeholder="Enter Item Name"
-              InputProps={{
-                style: {
-                  border: "1px solid #75007e",
-                  borderRadius: "10px",
-                },
-              }}
-            />
-            <InputLabel
-              sx={{ color: "#75007E", fontWeight: 500, mt: 3 }}
-              color="primary"
-            >
-              Email Address
-            </InputLabel>
-            <TextField
-              fullWidth
-              margin="dense"
-              size="medium"
-              placeholder="How many guest can this menu item serve?"
-              InputProps={{
-                style: {
-                  border: "1px solid #75007e",
-                  borderRadius: "10px",
-                },
-              }}
-            />
-          </Box>
+            {created ? (
+              <>
+                <Typography variant="subtitle1" color="primary">
+                  A profile has been successfully created for {name}. See Login
+                  details below
+                </Typography>
+                <InputLabel
+                  sx={{ color: "#75007E", fontWeight: 500, mt: 3 }}
+                  color="primary"
+                >
+                  Login Email
+                </InputLabel>
+                <TextField
+                  fullWidth
+                  value={data?.email}
+                  disabled
+                  margin="dense"
+                  size="medium"
+                  sx={{ width: "80%" }}
+                  InputProps={{
+                    style: {
+                      border: "1px solid #75007e",
+                      borderRadius: "10px",
+                    },
+                  }}
+                />
+                <InputLabel
+                  sx={{ color: "#75007E", fontWeight: 500, mt: 3 }}
+                  color="primary"
+                >
+                  Login Access Code
+                </InputLabel>
+                <Box
+                  sx={{
+                    mt: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    columnGap: 2,
+                  }}
+                >
+                  <Typography
+                    color="primary"
+                    sx={{ fontWeight: 700, fontSize: "20px" }}
+                  >
+                    {data?.login_access_code}
+                  </Typography>
+                  <IconButton
+                    onClick={() => handleCopy(data?.login_access_code)}
+                  >
+                    {copied ? (
+                      <MdDone style={{ fontSize: "14px" }} />
+                    ) : (
+                      <img src={copyIcon} />
+                    )}
+                  </IconButton>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box>
+                  <InputLabel
+                    sx={{ color: "#75007E", fontWeight: 500 }}
+                    color="primary"
+                  >
+                    Employee Name
+                  </InputLabel>
+                  <TextField
+                    fullWidth
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    margin="dense"
+                    size="medium"
+                    placeholder="Enter Item Name"
+                    InputProps={{
+                      style: {
+                        border: "1px solid #75007e",
+                        borderRadius: "10px",
+                      },
+                    }}
+                  />
+                  <InputLabel
+                    sx={{ color: "#75007E", fontWeight: 500, mt: 3 }}
+                    color="primary"
+                  >
+                    Email Address
+                  </InputLabel>
+                  <TextField
+                    fullWidth
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    margin="dense"
+                    size="medium"
+                    placeholder="How many guest can this menu item serve?"
+                    InputProps={{
+                      style: {
+                        border: "1px solid #75007e",
+                        borderRadius: "10px",
+                      },
+                    }}
+                  />
+                </Box>
 
-          <Box sx={{ mt: 5 }} align="center">
-            <Button variant="contained">Add Team Member</Button>
+                <Box sx={{ mt: 5 }} align="center">
+                  <Button
+                    variant="contained"
+                    sx={{ py: 2, px: 6 }}
+                    onClick={handleAddTeam}
+                    disabled={!name || !email}
+                  >
+                    Add Team Member
+                  </Button>
+                </Box>
+              </>
+            )}
           </Box>
         </Box>
       </Drawer>

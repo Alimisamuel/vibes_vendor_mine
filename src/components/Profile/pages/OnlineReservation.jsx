@@ -48,7 +48,7 @@ const OnlineReservation = () => {
         <Box sx={{ mt: 3, width: "80%" }}>
           <TextField
             fullWidth
-            value={"https://www.vibezsup.com/velvettlounge/id=12930180"}
+            value={data?.online_reservation_link}
             InputProps={{
               endAdornment: (
                 <InputAdornment>
@@ -58,6 +58,7 @@ const OnlineReservation = () => {
                       py: 1.8,
                       px: 6,
                       mr: -2,
+                      ml:1,
                       background: "#FFB872",
                       border: "1.57px solid #C56000",
                       borderRadius: "0px 10px 10px 0px",
@@ -78,6 +79,7 @@ const OnlineReservation = () => {
                 borderRadius: "10px",
                 background: "#FFF2E5",
                 color: "#C56000",
+                fontSize:'12px'
               },
             }}
           />
