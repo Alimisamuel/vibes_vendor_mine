@@ -187,12 +187,13 @@ const OpenHours = () => {
                 <Box sx={{ color: "#151515", opacity: mon ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Open</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -201,12 +202,13 @@ const OpenHours = () => {
                 <Box sx={{ opacity: mon ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Close</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -237,12 +239,13 @@ const OpenHours = () => {
                 <Box sx={{ color: "#151515", opacity: tues ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Open</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -251,12 +254,13 @@ const OpenHours = () => {
                 <Box sx={{ opacity: tues ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Close</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -287,12 +291,13 @@ const OpenHours = () => {
                 <Box sx={{ color: "#151515", opacity: wed ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Open</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -301,12 +306,13 @@ const OpenHours = () => {
                 <Box sx={{ opacity: wed ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Close</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -337,12 +343,13 @@ const OpenHours = () => {
                 <Box sx={{ color: "#151515", opacity: thur ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Open</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -351,12 +358,13 @@ const OpenHours = () => {
                 <Box sx={{ opacity: thur ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Close</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -387,12 +395,13 @@ const OpenHours = () => {
                 <Box sx={{ color: "#151515", opacity: fri ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Open</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -401,12 +410,13 @@ const OpenHours = () => {
                 <Box sx={{ opacity: fri ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Close</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -437,12 +447,13 @@ const OpenHours = () => {
                 <Box sx={{ color: "#151515", opacity: sat ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Open</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -451,12 +462,13 @@ const OpenHours = () => {
                 <Box sx={{ opacity: sat ? 1 : 0.2 }}>
                   <InputLabel sx={{ color: "#151515" }}>Close</InputLabel>
                   <TextField
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -488,12 +500,13 @@ const OpenHours = () => {
                   <InputLabel sx={{ color: "#151515" }}>Open</InputLabel>
                   <TextField
                     disabled={!sun}
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}
@@ -503,12 +516,13 @@ const OpenHours = () => {
                   <InputLabel sx={{ color: "#151515" }}>Close</InputLabel>
                   <TextField
                     disabled={!sun}
-                    sx={{ width: "100px" }}
+                    sx={{ width: "140px" }}
                     margin="dense"
                     type="time"
                     InputProps={{
                       style: {
-                        fontSize: "10px",
+                        fontSize: "12px",
+                        fontWeight:500,
                         border: "1px solid #151515",
                       },
                     }}

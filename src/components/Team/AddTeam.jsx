@@ -180,7 +180,7 @@ const AddTeam = ({action}) => {
                     onChange={(e) => setName(e.target.value)}
                     margin="dense"
                     size="medium"
-                    placeholder="Enter Item Name"
+                    placeholder="Enter Employee Name"
                     InputProps={{
                       style: {
                         border: "1px solid #75007e",
@@ -200,7 +200,7 @@ const AddTeam = ({action}) => {
                     onChange={(e) => setEmail(e.target.value)}
                     margin="dense"
                     size="medium"
-                    placeholder="How many guest can this menu item serve?"
+                    placeholder="Enter Email Address"
                     InputProps={{
                       style: {
                         border: "1px solid #75007e",

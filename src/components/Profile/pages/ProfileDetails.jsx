@@ -100,6 +100,8 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
+                       fontWeight:500
+                
                   },
                 }}
               />
@@ -124,6 +126,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
+                       fontWeight:500
                   },
                 }}
               />
@@ -205,6 +208,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
+                       fontWeight:500
                   },
                 }}
               />
@@ -227,6 +231,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
+                       fontWeight:500
                   },
                 }}
               />
@@ -249,6 +254,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
+                       fontWeight:500
                   },
                 }}
               />
