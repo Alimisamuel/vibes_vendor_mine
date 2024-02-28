@@ -46,7 +46,7 @@ const NewRule = () => {
 
   const wordsArray = description.split(/\s+/);
 
-  const wordCount = wordsArray.length - 1;
+  const wordCount = wordsArray.length ;
 
   useEffect(() => {
     if (wordCount > 50) {
@@ -70,6 +70,15 @@ const NewRule = () => {
         setIsLoading(false);
         console.log(err);
       });
+  };
+
+    const handleChange = (event) => {
+    const newValue = event.target.value;
+
+    // Limit the input to 50 words
+    if (newValue.split(' ').length <= 50) {
+      setDescription(newValue);
+    }
   };
   return (
     <>
@@ -140,7 +149,7 @@ const NewRule = () => {
             </InputLabel>
             <TextField
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={handleChange}
               fullWidth
               error={error}
               helperText={error && "exceeded 50 words"}
