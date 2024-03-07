@@ -26,12 +26,17 @@ import moreIcon from "../../assets/icons/more.svg";
 import serveIcon from "../../assets/icons/serve.svg";
 import editIcon from "../../assets/icons/edit.svg";
 import delIcon from "../../assets/icons/delete.svg";
-import { addMenuClassification, editMenuClass, getClassificationMenu, getMenuList } from "../../api";
+import {
+  addMenuClassification,
+  editMenuClass,
+  getClassificationMenu,
+  getMenuList,
+} from "../../api";
 import AddMenu from "../../components/Menu/AddMenu";
 import UpdateMenu from "../../components/Menu/UpdateMenu";
 import Loader from "../../components/common/Loader";
 import { useSnackbar } from "notistack";
-
+import emptyIcon from "../../assets/icons/team.svg";
 
 const style = {
   position: "absolute",
@@ -58,6 +63,8 @@ const OurMenu = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [name, setName] = useState("");
   const [menuId, setMenuId] = useState("");
+  const [menuClassData, setMenuClassData] = useState(null);
+  const [editData, setEditData] = useState(null)
 
   const handleAlert = (message, variant) => {
     enqueueSnackbar(message, { variant });
@@ -71,8 +78,10 @@ const OurMenu = () => {
     setOpen(true);
     setIsSuccess(false);
   };
-  const handleOpenPopper = (event) => {
+  const handleOpenPopper = (event, data) => {
     setAnchorEl(event.currentTarget);
+    setEditData(data)
+    console.log(editData)
   };
 
   const handleClosePoper = () => {
@@ -90,28 +99,30 @@ const OurMenu = () => {
         }
       })
       .catch((err) => {
-        setIsLoading(false)
+        setIsLoading(false);
         console.log(err);
-        handleAlert(`${err.message}`, "error");
+        handleAlert(`${err.response.data.message}`, "error");
       });
   };
 
-  const handleGetClassMenu = async () =>{
-    setIsLoading(true)
+  const handleGetClassMenu = async () => {
+    setIsLoading(true);
     await getClassificationMenu(menuId)
-    .then((res)=>{
-      setIsLoading(false)
-      console.log(res)
-    }).catch((err)=>{
-           setIsLoading(false)
-      console.log(err)
-    })
-  }
+      .then((res) => {
+        setIsLoading(false);
+        console.log(res?.data?.data);
+        setMenuClassData(res?.data?.data);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
+  };
 
-  const handleMenuClick = (id) =>{
-     
-    handleGetClassMenu()
-  }
+  const handleMenuClick = (id) => {
+    handleGetClassMenu();
+  };
 
   const openPopper = Boolean(anchorEl);
   const id = openPopper ? "simple-popover" : undefined;
@@ -130,7 +141,7 @@ const OurMenu = () => {
       .catch((err) => {
         setIsLoading(false);
         console.log(err);
-                handleAlert(`${err.message}`, "error");
+        handleAlert(`${err.response.data.message}`, "error");
       });
   };
 
@@ -139,7 +150,6 @@ const OurMenu = () => {
     setIsSuccess(false);
     await addMenuClassification(name)
       .then((res) => {
-        console.log(res);
         setIsLoading(false);
         if (res?.data?.status) {
           setIsSuccess(true);
@@ -149,15 +159,22 @@ const OurMenu = () => {
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
-                handleAlert(`${err.message}`, "error");
+        handleAlert(`${err.response.data.message}`, "error");
       });
   };
 
-  useEffect(()=>{
-if(menuId){
-  handleGetClassMenu()
-}
-  }, [menuId])
+  useEffect(() => {
+    if (menuData) {
+      setIsActive(menuData[0]?.id);
+      setMenuId(menuData[0]?.id);
+    }
+  }, [menuData]);
+  useEffect(() => {
+    if (menuId) {
+      handleGetClassMenu();
+    }
+  }, [menuId]);
+
   useEffect(() => {
     hadleGetMenuList();
   }, []);
@@ -180,7 +197,11 @@ if(menuId){
               </Typography>
               <Box sx={{ mt: 3 }}>
                 <ListItemButton
-                  onClick={() => setIsActive(table_id)}
+                     onClick={() => {
+                              setIsActive(table_id);
+                              setMenuId(table_id);
+                            }}
+               
                   selected={active === table_id}
                   sx={{
                     border: "1px solid #151515",
@@ -228,10 +249,8 @@ if(menuId){
                         menuData?.slice(1)?.map((item, index) => (
                           <ListItemButton
                             onClick={() => {
-                    
-                             setIsActive(item?.id)
-    setMenuId(item?.id);
-                            
+                              setIsActive(item?.id);
+                              setMenuId(item?.id);
                             }}
                             key={index}
                             selected={active === item?.id}
@@ -326,7 +345,7 @@ if(menuId){
                 }}
               >
                 <Typography variant="subtitle2" sx={{ color: "#151515" }}>
-                  All Menu Items for Tables
+                  All Menu Items for {menuClassData && menuClassData.name}
                 </Typography>
                 <Box
                   sx={{ display: "flex", alignItems: "center", columnGap: 3 }}
@@ -341,72 +360,110 @@ if(menuId){
                   >
                     Clear Filter
                   </Typography>
-                  <AddMenu />
+                  <AddMenu selectData={menuData}  action={hadleGetMenuList}/>
                 </Box>
               </Box>
               <Box sx={{ mt: 5 }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ color: "#8f8f8f" }}></TableCell>
-                      <TableCell sx={{ color: "#8f8f8f" }}>Item Name</TableCell>
-                      <TableCell sx={{ color: "#8f8f8f" }}>
-                        Unit Price
-                      </TableCell>
-                      <TableCell sx={{ color: "#8f8f8f" }}>
-                        Resv Count
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{ color: "#8f8f8f" }}
-                      ></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow sx={{ border: "none" }}>
-                      <TableCell sx={{ border: "none" }}>
-                        <Avatar src={img1} variant="rounded" />
-                      </TableCell>
-                      <TableCell
+                {!menuClassData || menuClassData?.items?.length === 0 ? (
+                  <>
+                    <Box
+                      sx={{
+                        height: "400px",
+                        width: "100%",
+
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent:'center'
+                      }}
+                    >
+                      <img src={emptyIcon} />
+                      <Typography
                         sx={{
-                          border: "none",
-                          color: "#151515",
-                          fontWeight: 500,
+                          color: "#8f8f8f",
+                          width: "60%",
+                          textAlign: "center",
+                          mt:2
                         }}
                       >
-                        Odogwu Marley Table
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          border: "none",
-                          color: "#151515",
-                          fontWeight: 500,
-                        }}
-                      >
-                        N157,000
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          border: "none",
-                          color: "#151515",
-                          fontWeight: 500,
-                        }}
-                      >
-                        15
-                      </TableCell>
-                      <TableCell
-                        align="right"
-                        sx={{
-                          border: "none",
-                        }}
-                      >
-                        <IconButton onClick={handleOpenPopper}>
-                          <img aria-describedby={id} src={moreIcon} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                        You currently have no menu items under this
+                        classification. Use the “{menuClassData && menuClassData?.name} Menu Item” button above
+                        to create items under this classification.
+                      </Typography>
+                    </Box>
+                  </>
+                ) : (
+                  <>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{ color: "#8f8f8f" }}></TableCell>
+                          <TableCell sx={{ color: "#8f8f8f" }}>
+                            Item Name
+                          </TableCell>
+                          <TableCell sx={{ color: "#8f8f8f" }}>
+                            Unit Price
+                          </TableCell>
+                          <TableCell sx={{ color: "#8f8f8f" }}>
+                            Resv Count
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{ color: "#8f8f8f" }}
+                          ></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {menuClassData?.items?.map((item, index) => (
+                          <TableRow key={index} sx={{ border: "none" }}>
+                            <TableCell sx={{ border: "none" }}>
+                              <Avatar src={item?.
+image} variant="rounded" />
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                border: "none",
+                                color: "#151515",
+                                fontWeight: 500,
+                              }}
+                            >
+                          {item?.name}
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                border: "none",
+                                color: "#151515",
+                                fontWeight: 500,
+                              }}
+                            >
+                              N {item?.unit_price?.toLocaleString()}
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                border: "none",
+                                color: "#151515",
+                                fontWeight: 500,
+                              }}
+                            >
+                         {item?.
+resv_count}
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                              sx={{
+                                border: "none",
+                              }}
+                            >
+                              <IconButton onClick={(e)=>handleOpenPopper(e, item)}>
+                                <img aria-describedby={id} src={moreIcon} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </>
+                )}
               </Box>
             </Card>
           </Grid>
@@ -678,7 +735,7 @@ if(menuId){
         </Box>
       </Popover>
 
-      <UpdateMenu open={drawer} onClose={handleCloseDrawer} edit={isEdit} />
+      <UpdateMenu open={drawer} onClose={handleCloseDrawer} edit={isEdit} data={editData} selectData= {menuData} />
     </>
   );
 };

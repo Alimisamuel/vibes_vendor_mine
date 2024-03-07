@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -9,17 +9,78 @@ import {
   TextField,
   InputAdornment,
   MenuItem,
+  Avatar,
 } from "@mui/material";
 import cancelIcon from "../../assets/icons/cancel.svg";
 import galleryIcon from "../../assets/icons/gallery.svg";
 
-const UpdateMenu = ({ open, onClose, edit }) => {
+const UpdateMenu = ({ open, onClose, edit, data, selectData }) => {
   const [isEdit, setIsEdit] = useState(false);
   useEffect(() => {
     if (edit) {
       setIsEdit(true);
     }
   }, [edit]);
+
+  const [name, setName] = useState("");
+  const [menu_class_id, setMenuClassId] = useState("");
+  const [max_guest_serving, setMaxGuestServing] = useState("");
+  const [unit_price, setUnitPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [g_error, setG_Error] = useState(false);
+
+  useEffect(() => {
+    if (data) {
+      setName(data?.name);
+      setMenuClassId(data?.id);
+      setDescription(data?.description);
+      setUnitPrice(data?.unit_price);
+      setMaxGuestServing(data?.max_guest_serving);
+      setSelectedFileURL(data?.image);
+    }
+  }, [data]);
+
+  const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(" ");
+  const handleButtonClick = () => {
+    fileInputRef.current.click(); // Trigger file input click
+  };
+  const [selectedFileURL, setSelectedFileURL] = useState(null);
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataURL = e.target.result;
+        setSelectedFileURL(dataURL);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const wordsArray = description.split(/\s+/);
+
+  const wordCount = wordsArray.length;
+  useEffect(() => {
+    if (wordCount > 50) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }, [description]);
+
+  const handleChange = (event) => {
+    const newValue = event.target.value;
+
+    // Limit the input to 50 words
+    if (newValue.split(" ").length <= 50) {
+      setDescription(newValue);
+    }
+  };
   return (
     <>
       <Drawer anchor="right" open={open} onClose={onClose}>
@@ -58,8 +119,9 @@ const UpdateMenu = ({ open, onClose, edit }) => {
               </InputLabel>
               <TextField
                 fullWidth
+                value={name}
                 aria-readonly
-                value={"samuell"}
+                onChange={(e) => setName(e.target.value)}
                 margin="dense"
                 placeholder="Enter Item Name"
                 InputProps={{
@@ -75,18 +137,33 @@ const UpdateMenu = ({ open, onClose, edit }) => {
               <InputLabel sx={{ color: "#75007E", fontWeight: 500 }}>
                 Menu Item Classification
               </InputLabel>
+
               <TextField
                 fullWidth
+                select
+                value={menu_class_id}
+                onChange={(e) => setMenuClassId(e.target.value)}
                 margin="dense"
                 placeholder="Enter Item Name"
                 InputProps={{
                   style: {
                     borderRadius: "10px",
                     border: "1px solid #75007e",
+                    bgcolor: "#FCEDFE",
                   },
-                  readOnly: !isEdit,
                 }}
-              />
+              >
+                {selectData?.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    value={item?.id}
+                    // onClick={() => setMenuClassId(item?.id)}
+                    sx={{ color: "#151515" }}
+                  >
+                    {item?.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Box>
             <Box sx={{ mt: 2 }}>
               <InputLabel sx={{ color: "#75007E", fontWeight: 500 }}>
@@ -94,6 +171,8 @@ const UpdateMenu = ({ open, onClose, edit }) => {
               </InputLabel>
               <TextField
                 fullWidth
+                value={max_guest_serving}
+                onChange={(e) => setMaxGuestServing(e.target.value)}
                 margin="dense"
                 placeholder="Enter Item Name"
                 InputProps={{
@@ -111,6 +190,7 @@ const UpdateMenu = ({ open, onClose, edit }) => {
               </InputLabel>
               <Box sx={{ display: "flex", alignItems: "end" }}>
                 <Box
+                  onClick={isEdit && handleButtonClick}
                   sx={{
                     width: "112px",
                     height: "112px",
@@ -123,17 +203,42 @@ const UpdateMenu = ({ open, onClose, edit }) => {
                     justifyContent: "center",
                   }}
                 >
-                  <img src={galleryIcon} />
-                  <Typography
-                    sx={{ mt: 1, color: "#8f8f8f", textAlign: "center" }}
-                  >
-                    Click to add image
-                  </Typography>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleFileSelect}
+                  />
+                  {selectedFileURL ? (
+                    <Avatar
+                      sx={{ width: "100px", height: "100px", borderRadius: 1 }}
+                      variant="square"
+                      src={selectedFileURL}
+                      alt="Selected File"
+                      // onClick={handleButtonClick}
+                    />
+                  ) : (
+                    <>
+                      <img src={galleryIcon} />
+                      <Typography
+                        sx={{ mt: 1, color: "#8f8f8f", textAlign: "center" }}
+                      >
+                        Click to add image
+                      </Typography>
+                    </>
+                  )}
                 </Box>
                 {isEdit && (
                   <Typography
+                    onClick={isEdit && handleButtonClick}
                     color="primary"
-                    sx={{ textDecoration: "underline", ml: 1, fontWeight:500 }}
+                    sx={{
+                      textDecoration: "underline",
+                      ml: 1,
+                      fontWeight: 500,
+                      cursor: "pointer",
+                    }}
                   >
                     Change Image
                   </Typography>
@@ -146,6 +251,8 @@ const UpdateMenu = ({ open, onClose, edit }) => {
               </InputLabel>
               <TextField
                 fullWidth
+                value={unit_price}
+                onChange={(e) => setUnitPrice(e.target.value)}
                 margin="dense"
                 placeholder="Enter Unit price"
                 InputProps={{
@@ -181,6 +288,8 @@ const UpdateMenu = ({ open, onClose, edit }) => {
                 fullWidth
                 margin="dense"
                 placeholder="Enter Unit price"
+                value={description}
+                onChange={handleChange}
                 multiline
                 rows={7}
                 InputProps={{
@@ -200,7 +309,9 @@ const UpdateMenu = ({ open, onClose, edit }) => {
                   mt: -6,
                 }}
               >
-                <Typography sx={{ color: "#8f8f8f" }}>0/50</Typography>
+                <Typography sx={{ color: "#8f8f8f" }}>
+                  {wordCount}/50
+                </Typography>
               </Box>
               <Box sx={{ mt: 3 }} />
             </Box>
