@@ -10,18 +10,38 @@ import {
   InputAdornment,
   MenuItem,
   Avatar,
+  Modal
 } from "@mui/material";
 import cancelIcon from "../../assets/icons/cancel.svg";
 import galleryIcon from "../../assets/icons/gallery.svg";
+import { editMenuItem } from "../../api";
+import { useSnackbar } from "notistack";
+import Loader from "../common/Loader";
+import serveIcon from "../../assets/icons/serve.svg";
 
-const UpdateMenu = ({ open, onClose, edit, data, selectData }) => {
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 500,
+  bgcolor: "background.paper",
+  boxSizing: "border-box",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 5,
+};
+
+const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
   const [isEdit, setIsEdit] = useState(false);
   useEffect(() => {
     if (edit) {
       setIsEdit(true);
     }
   }, [edit]);
+  const { enqueueSnackbar } = useSnackbar();
 
+  const [open2, setOpen2] = useState(false);
   const [name, setName] = useState("");
   const [menu_class_id, setMenuClassId] = useState("");
   const [max_guest_serving, setMaxGuestServing] = useState("");
@@ -30,6 +50,11 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [g_error, setG_Error] = useState(false);
+  const [id, setId] = useState("");
+
+  const handleAlert = (message, variant) => {
+    enqueueSnackbar(message, { variant });
+  };
 
   useEffect(() => {
     if (data) {
@@ -39,6 +64,8 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData }) => {
       setUnitPrice(data?.unit_price);
       setMaxGuestServing(data?.max_guest_serving);
       setSelectedFileURL(data?.image);
+      setSelectedFile(data?.image)
+      setId(data?.id);
     }
   }, [data]);
 
@@ -81,8 +108,38 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData }) => {
       setDescription(newValue);
     }
   };
+
+  const handleEditItem = async () => {
+    setIsLoading(true)
+    await editMenuItem(
+      id,
+      name,
+      menu_class_id,
+      max_guest_serving,
+      selectedFile,
+      unit_price,
+      description
+    )
+      .then((res) => {
+        setIsLoading(false);
+        console.log(false);
+        setOpen2(true);
+
+        action();
+
+        setMaxGuestServing("");
+        setUnitPrice("");
+        setDescription("");
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
+  };
   return (
     <>
+          {isLoading && <Loader />}
       <Drawer anchor="right" open={open} onClose={onClose}>
         <Box
           sx={{
@@ -329,7 +386,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData }) => {
             {isEdit && (
               <Button
                 variant="contained"
-                onClick={() => setIsEdit(false)}
+                onClick={handleEditItem}
                 sx={{ px: 10, py: 2, borderRadius: 3 }}
               >
                 Save Update
@@ -338,6 +395,50 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData }) => {
           </Box>
         </Box>
       </Drawer>
+
+          <Modal
+        open={open2}
+        onClose={() =>{
+
+        setOpen2(false)}}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box
+            sx={{
+              mt: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <img src={serveIcon} />
+            <Typography
+              sx={{
+                color: "#151515",
+                fontWeight: 500,
+                fontSize: "12px",
+                mt: 2,
+              }}
+            >
+              “{name}” has been successfully added as a Menu Item
+            </Typography>
+            <Box
+              align="center"
+              sx={{
+                mt: 4,
+              }}
+            >
+              <Button onClick={() => setOpen2(false)} sx={{}}>
+                <Typography color="error" sx={{ textDecoration: "underline" }}>
+                  Close
+                </Typography>
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 };

@@ -17,7 +17,7 @@ import galleryIcon from "../../assets/icons/gallery.svg";
 import { addMenuItem } from "../../api";
 import Loader from "../common/Loader";
 import { useSnackbar } from "notistack";
-import serveIcon from '../../assets/icons/serve.svg'
+import serveIcon from "../../assets/icons/serve.svg";
 
 const style = {
   position: "absolute",
@@ -32,11 +32,10 @@ const style = {
   borderRadius: 5,
 };
 
-
 const AddMenu = ({ selectData, action }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const [open2, setOpen2] = useState(false)
+  const [open2, setOpen2] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -95,14 +94,7 @@ const AddMenu = ({ selectData, action }) => {
   };
 
   const handleAddMenuClass = async () => {
-    console.log(
-      name,
-      menu_class_id,
-      max_guest_serving,
-      selectedFile,
-      unit_price,
-      description
-    );
+
     if (
       !name ||
       !menu_class_id ||
@@ -125,9 +117,13 @@ const AddMenu = ({ selectData, action }) => {
       .then((res) => {
         setIsLoading(false);
         console.log(false);
-        setOpen2(true)
-        setOpen(false)
-        action()
+        setOpen2(true);
+        setOpen(false);
+        action();
+
+        setMaxGuestServing("")
+        setUnitPrice("")
+        setDescription("")
       })
       .catch((err) => {
         setIsLoading(false);
@@ -258,7 +254,7 @@ const AddMenu = ({ selectData, action }) => {
                 value={max_guest_serving}
                 onChange={(e) => setMaxGuestServing(e.target.value)}
                 margin="dense"
-                placeholder="Enter Item Name"
+                placeholder="Enter Max Guest No."
                 InputProps={{
                   style: {
                     borderRadius: "10px",
@@ -373,7 +369,7 @@ const AddMenu = ({ selectData, action }) => {
                 error={error}
                 onChange={handleChange}
                 margin="dense"
-                placeholder="Enter Unit price"
+                placeholder="Enter Menu Item Description"
                 multiline
                 rows={7}
                 InputProps={{
@@ -412,52 +408,49 @@ const AddMenu = ({ selectData, action }) => {
         </Box>
       </Drawer>
 
+      <Modal
+        open={open2}
+        onClose={() =>{
 
-      <Modal 
-            open={open2}
-        onClose={()=>setOpen2(false)}
+        setOpen2(false)}}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        >
-
-          <Box sx={style}>
-                <Box
-                sx={{
-                  mt: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <img src={serveIcon} />
-                <Typography
-                  sx={{
-                    color: "#151515",
-                    fontWeight: 500,
-                    fontSize: "12px",
-                    mt: 2,
-                  }}
-                >
-             “{name}” has been successfully added as a Menu Item
+      >
+        <Box sx={style}>
+          <Box
+            sx={{
+              mt: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <img src={serveIcon} />
+            <Typography
+              sx={{
+                color: "#151515",
+                fontWeight: 500,
+                fontSize: "12px",
+                mt: 2,
+              }}
+            >
+              “{name}” has been successfully added as a Menu Item
+            </Typography>
+            <Box
+              align="center"
+              sx={{
+                mt: 4,
+              }}
+            >
+              <Button onClick={() => setOpen2(false)} sx={{}}>
+                <Typography color="error" sx={{ textDecoration: "underline" }}>
+                  Close
                 </Typography>
-                <Box
-                  align="center"
-                  sx={{
-                    mt: 4,
-                  }}
-                >
-                  <Button onClick={() => setOpen2(false)} sx={{}}>
-                    <Typography
-                      color="error"
-                      sx={{ textDecoration: "underline" }}
-                    >
-                      Close
-                    </Typography>
-                  </Button>
-                </Box>
-              </Box>
+              </Button>
+            </Box>
           </Box>
-        </Modal>
+        </Box>
+      </Modal>
     </>
   );
 };

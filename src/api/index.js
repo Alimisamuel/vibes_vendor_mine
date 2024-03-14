@@ -120,6 +120,9 @@ const editMenuClass = (id, name) =>{
 const deleteMenuClass = (id, name) => {
   return apiClient.delete(`/merchant/menu-classification/${id}`, {name})
 }
+const deleteMenuItem = (id, name) => {
+  return apiClient.delete(`/merchant/menu-item/${id}`, {name})
+}
 
 const getClassificationMenu = (id) =>{
   return apiClient.get(`/merchant/menu/${id}`)
@@ -142,6 +145,26 @@ const addMenuItem = (
   formData.append("description", description);
   return apiClient.post('/merchant/menu', formData)
 };
+const editMenuItem = (
+  id,
+  name,
+  menu_classification_id,
+  max_guest_serving,
+  image,
+  unit_price,
+  description
+) => {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("menu_classification_id", menu_classification_id);
+  formData.append("max_guest_serving", max_guest_serving);
+  formData.append("image", image);
+  formData.append("unit_price", unit_price);
+  formData.append("description", description);
+  return apiClient.post(`/merchant/menu-item/${id}?_method=PUT`, formData)
+};
+
+
 
 export {
   login,
@@ -162,4 +185,6 @@ export {
   deleteMenuClass,
   getClassificationMenu,
   addMenuItem,
+  editMenuItem,
+  deleteMenuItem
 };

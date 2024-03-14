@@ -24,7 +24,7 @@ const style = {
 
 const ChangePassword = () => {
   const [password, setPassword] = React.useState("");
-  const { enqueueSnackbar } = useSnackbar();
+
   const [confrirmPassword, setConfirmPassword] = React.useState("");
   const [error, setError] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -44,7 +44,7 @@ const ChangePassword = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const { enqueueSnackbar } = useSnackbar();
   const handleAlert = (message, variant) => {
     enqueueSnackbar(message, { variant });
   };

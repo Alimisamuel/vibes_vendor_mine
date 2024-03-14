@@ -31,12 +31,15 @@ import {
   editMenuClass,
   getClassificationMenu,
   getMenuList,
+  deleteMenuClass,
+  deleteMenuItem,
 } from "../../api";
 import AddMenu from "../../components/Menu/AddMenu";
 import UpdateMenu from "../../components/Menu/UpdateMenu";
 import Loader from "../../components/common/Loader";
 import { useSnackbar } from "notistack";
 import emptyIcon from "../../assets/icons/team.svg";
+import deleteIcon from "../../assets/icons/serve_error.svg";
 
 const style = {
   position: "absolute",
@@ -55,7 +58,14 @@ const OurMenu = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const handleClose = () => setOpen(false);
+  const [openDeleteItem, setOpenDeleteItem] = useState(false);
+  const [openDeleteClass, setOpenDeleteClass] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+    if (isSuccess) {
+      setName("");
+    }
+  };
   const [menuData, setMenuData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [drawer, setDrawer] = useState(false);
@@ -64,7 +74,8 @@ const OurMenu = () => {
   const [name, setName] = useState("");
   const [menuId, setMenuId] = useState("");
   const [menuClassData, setMenuClassData] = useState(null);
-  const [editData, setEditData] = useState(null)
+  const [editData, setEditData] = useState(null);
+  const [isItemEmpty, setIsItemEmpty] = useState(false);
 
   const handleAlert = (message, variant) => {
     enqueueSnackbar(message, { variant });
@@ -80,8 +91,8 @@ const OurMenu = () => {
   };
   const handleOpenPopper = (event, data) => {
     setAnchorEl(event.currentTarget);
-    setEditData(data)
-    console.log(editData)
+    setEditData(data);
+    console.log(editData);
   };
 
   const handleClosePoper = () => {
@@ -97,6 +108,46 @@ const OurMenu = () => {
           setIsSuccess(true);
           hadleGetMenuList();
         }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
+  };
+  const handleMenuClassDeleteClick = () => {
+    setOpenDeleteClass(true);
+    if (menuClassData) {
+      if (menuClassData?.items.length > 0) {
+        setIsItemEmpty(false);
+      } else {
+        setIsItemEmpty(true);
+      }
+    }
+    console.log(isItemEmpty, menuClassData);
+  };
+
+  const handleDeleteMenuClass = async () => {
+    setIsLoading(true);
+    setIsItemEmpty(true);
+    await deleteMenuClass(menuId, name)
+      .then((res) => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
+  };
+  const handleDeleteMenuItem = async () => {
+    setIsLoading(true);
+    console.log(editData?.id, editData?.name);
+    await deleteMenuItem(editData?.id, editData?.name)
+      .then((res) => {
+        setIsLoading(false);
+        setIsSuccess(true);
+        handleGetClassMenu();
       })
       .catch((err) => {
         setIsLoading(false);
@@ -197,11 +248,10 @@ const OurMenu = () => {
               </Typography>
               <Box sx={{ mt: 3 }}>
                 <ListItemButton
-                     onClick={() => {
-                              setIsActive(table_id);
-                              setMenuId(table_id);
-                            }}
-               
+                  onClick={() => {
+                    setIsActive(table_id);
+                    setMenuId(table_id);
+                  }}
                   selected={active === table_id}
                   sx={{
                     border: "1px solid #151515",
@@ -308,7 +358,14 @@ const OurMenu = () => {
                                 >
                                   <img src={editIcon} />
                                 </IconButton>
-                                <IconButton>
+                                <IconButton
+                                  onClick={() => {
+                                    handleMenuClassDeleteClick();
+                                    setIsSuccess(false);
+                                    setName(item?.name);
+                                    setMenuId(item?.id);
+                                  }}
+                                >
                                   <img src={delIcon} />
                                 </IconButton>
                               </Box>
@@ -360,7 +417,7 @@ const OurMenu = () => {
                   >
                     Clear Filter
                   </Typography>
-                  <AddMenu selectData={menuData}  action={hadleGetMenuList}/>
+                  <AddMenu selectData={menuData} action={hadleGetMenuList} />
                 </Box>
               </Box>
               <Box sx={{ mt: 5 }}>
@@ -374,7 +431,7 @@ const OurMenu = () => {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        justifyContent:'center'
+                        justifyContent: "center",
                       }}
                     >
                       <img src={emptyIcon} />
@@ -383,12 +440,13 @@ const OurMenu = () => {
                           color: "#8f8f8f",
                           width: "60%",
                           textAlign: "center",
-                          mt:2
+                          mt: 2,
                         }}
                       >
                         You currently have no menu items under this
-                        classification. Use the “{menuClassData && menuClassData?.name} Menu Item” button above
-                        to create items under this classification.
+                        classification. Use the “
+                        {menuClassData && menuClassData?.name} Menu Item” button
+                        above to create items under this classification.
                       </Typography>
                     </Box>
                   </>
@@ -417,8 +475,7 @@ const OurMenu = () => {
                         {menuClassData?.items?.map((item, index) => (
                           <TableRow key={index} sx={{ border: "none" }}>
                             <TableCell sx={{ border: "none" }}>
-                              <Avatar src={item?.
-image} variant="rounded" />
+                              <Avatar src={item?.image} variant="rounded" />
                             </TableCell>
                             <TableCell
                               sx={{
@@ -427,7 +484,7 @@ image} variant="rounded" />
                                 fontWeight: 500,
                               }}
                             >
-                          {item?.name}
+                              {item?.name}
                             </TableCell>
                             <TableCell
                               sx={{
@@ -445,8 +502,7 @@ image} variant="rounded" />
                                 fontWeight: 500,
                               }}
                             >
-                         {item?.
-resv_count}
+                              {item?.resv_count}
                             </TableCell>
                             <TableCell
                               align="right"
@@ -454,7 +510,9 @@ resv_count}
                                 border: "none",
                               }}
                             >
-                              <IconButton onClick={(e)=>handleOpenPopper(e, item)}>
+                              <IconButton
+                                onClick={(e) => handleOpenPopper(e, item)}
+                              >
                                 <img aria-describedby={id} src={moreIcon} />
                               </IconButton>
                             </TableCell>
@@ -690,6 +748,243 @@ resv_count}
           )}
         </Box>
       </Modal>
+      <Modal
+        open={openDeleteItem}
+        onClose={() => {
+          setIsSuccess(false);
+          setOpenDeleteItem(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          {isSuccess ? (
+            <>
+              <Box
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <img src={deleteIcon} />
+                <Typography
+                  sx={{
+                    color: "#151515",
+                    fontWeight: 500,
+                    fontSize: "12px",
+                    mt: 2,
+                  }}
+                >
+                  Menu item successfully deleted
+                </Typography>
+                <Box
+                  align="center"
+                  sx={{
+                    mt: 4,
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setIsSuccess(false);
+                      setOpenDeleteItem(false);
+                    }}
+                    sx={{}}
+                  >
+                    <Typography
+                      color="error"
+                      sx={{ textDecoration: "underline" }}
+                    >
+                      Close
+                    </Typography>
+                  </Button>
+                </Box>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <img src={deleteIcon} />
+                <Typography
+                  sx={{
+                    color: "#151515",
+                    fontWeight: 500,
+                    fontSize: "12px",
+                    mt: 2,
+                  }}
+                >
+                  Are you sure you want to delete this Menu item?
+                </Typography>
+
+                <Box
+                  align="center"
+                  sx={{
+                    width: "80%",
+                    mt: 4,
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    onClick={handleDeleteMenuItem}
+                    sx={{ borderRadius: "7px", py: 1 }}
+                  >
+                    Delete Item
+                  </Button>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openDeleteClass}
+        onClose={() => {
+          setIsSuccess(false);
+          setOpenDeleteClass(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          {isItemEmpty ? (
+            <>
+              {isSuccess ? (
+                <>
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img src={deleteIcon} />
+                    <Typography
+                      sx={{
+                        color: "#151515",
+                        fontWeight: 500,
+                        fontSize: "12px",
+                        mt: 2,
+                      }}
+                    >
+                      Menu item successfully deleted
+                    </Typography>
+                    <Box
+                      align="center"
+                      sx={{
+                        mt: 4,
+                      }}
+                    >
+                      <Button
+                        onClick={() => {
+                          setIsSuccess(false);
+                          setOpenDeleteItem(false);
+                        }}
+                        sx={{}}
+                      >
+                        <Typography
+                          color="error"
+                          sx={{ textDecoration: "underline" }}
+                        >
+                          Close
+                        </Typography>
+                      </Button>
+                    </Box>
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img src={deleteIcon} />
+                    <Typography
+                      sx={{
+                        color: "#151515",
+                        fontWeight: 500,
+                        fontSize: "12px",
+                        mt: 2,
+                      }}
+                    >
+                      Are you sure you want to delete this Menu item?
+                    </Typography>
+
+                    <Box
+                      align="center"
+                      sx={{
+                        width: "80%",
+                        mt: 4,
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        onClick={handleDeleteMenuItem}
+                        sx={{ borderRadius: "7px", py: 1 }}
+                      >
+                        Delete Item
+                      </Button>
+                    </Box>
+                  </Box>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <img src={deleteIcon} />
+                <Typography
+                  sx={{
+                    color: "#151515",
+                    fontWeight: 500,
+                    fontSize: "12px",
+                    mt: 2,
+                  }}
+                >
+                  All Menu item in this classification needs to be re-assigned
+                  or deleted before the classification can be deleted
+                </Typography>
+
+                <Box
+                  align="center"
+                  sx={{
+                    width: "80%",
+                    mt: 4,
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    onClick={() => setOpenDeleteClass(false)}
+                    sx={{ borderRadius: "7px", py: 1 }}
+                  >
+                    Close
+                  </Button>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
+      </Modal>
 
       <Popover
         id={id}
@@ -729,13 +1024,22 @@ resv_count}
           <MenuItem sx={{ color: "#007E23", mt: 0.5, py: 1 }}>
             Relist Menu Item
           </MenuItem>
-          <MenuItem sx={{ color: "#A71200", mt: 0.5, py: 1 }}>
+          <MenuItem
+            onClick={() => setOpenDeleteItem(true)}
+            sx={{ color: "#A71200", mt: 0.5, py: 1 }}
+          >
             Delete Menu Item
           </MenuItem>
         </Box>
       </Popover>
 
-      <UpdateMenu open={drawer} onClose={handleCloseDrawer} edit={isEdit} data={editData} selectData= {menuData} />
+      <UpdateMenu
+        open={drawer}
+        onClose={handleCloseDrawer}
+        edit={isEdit}
+        data={editData}
+        selectData={menuData}
+      />
     </>
   );
 };
