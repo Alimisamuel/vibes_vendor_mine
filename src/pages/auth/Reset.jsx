@@ -5,12 +5,19 @@ import CustomInput from "../../components/Custom/CustomInput";
 import { Link, useNavigate } from "react-router-dom";
 import { forgotPassword } from "../../api";
 import Loader from "../../components/common/Loader";
+import { useSnackbar } from "notistack";
 
 const Reset = () => {
   const [email, setEmail] = useState("");
+    const { enqueueSnackbar } = useSnackbar();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
+
+    const handleAlert = (message, variant) => {
+    enqueueSnackbar(message, { variant });
+  };
+
   const handleForgotPassword = async () => {
     setLoading(true);
     await forgotPassword(email)
@@ -24,6 +31,7 @@ const Reset = () => {
       .catch((err) => {
         setLoading(false);
         console.log(err);
+            handleAlert(`${err.response.data.message}`, "error");
       });
   };
 

@@ -22,7 +22,7 @@ const ReservationView = () => {
         </Typography>
         <Box sx={{ mt: 2 }}>
           <TableContainer sx={{ "&::-webkit-scrollbar": { display: "none" } }}>
-            <Table size="small">
+            <Table padding="normal" size="small">
               <TableHead>
                 <TableRow>
                   <TableCell
@@ -361,7 +361,7 @@ const DateChip = ({ reserved, cancelled }) => {
         sx={{
           border: "1.5px solid #8f8f8f",
           borderRadius: "10px",
-          width: "54px",
+          // minWidth: "30px",
           height: "54px",
           ...(reserved && {
             border: "1.5px solid #75007E",

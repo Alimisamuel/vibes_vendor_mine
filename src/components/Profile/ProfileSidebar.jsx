@@ -1,6 +1,6 @@
 import { Box, Button, ListItemButton } from "@mui/material";
 import React from "react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import ProfileNavConfig from "./NavConfig";
 import RouterLink from "../../hooks/router-link";
 import { usePathname } from "../../hooks/use-pathname";
@@ -8,23 +8,23 @@ import PropTypes from "prop-types";
 import { UseDispatch, useDispatch } from "react-redux";
 import { logoutUser } from "../../store/userSlice";
 
-
 const ProfileSidebar = () => {
-  const dispatch = useDispatch()
-const navigate = useNavigate()
-  const handleLogout = () =>{
-navigate('/login')
-dispatch(logoutUser())
-  }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    navigate("/login");
+    dispatch(logoutUser());
+  };
   return (
     <>
       <Box
         sx={{
           bgcolor: "#fff",
           width: "220px",
-          borderRadius: "12px 12px 0px 0px",
+          borderRadius: "12px",
           border: "1px solid #DEDEDE",
-          height: "80vh",
+          height: "fit-content",
+          // position: "static",
         }}
       >
         <Box
@@ -36,6 +36,7 @@ dispatch(logoutUser())
             alignItems: "center",
             justifyContent: "space-between",
             mt: 1,
+            mb: 2,
           }}
         >
           {ProfileNavConfig.map((item, index) => (

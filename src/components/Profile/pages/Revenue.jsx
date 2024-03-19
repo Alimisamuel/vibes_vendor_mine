@@ -68,7 +68,9 @@ const Revenue = () => {
                     sx={{ fontWeight: 700, fontSize: "20px", mt: 0.5 }}
                     color="primary"
                   >
-                    N515,000
+       {data?.
+vibez_balance
+}
                   </Typography>
                   <Button
                     variant="contained"

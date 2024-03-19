@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 
-const Header = ({title, caption}) => {
+const Header = ({ title, caption }) => {
   const formatDate = () => {
     const daysOfWeek = [
       "Sunday",
@@ -42,14 +42,13 @@ const Header = ({title, caption}) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          position:'fixed',
-          width:'77%',
-          boxSizing:'border-box',
-          backdropFilter:'blur(12px)',
-          pt:6,
-          zIndex:1000
-        
- 
+          position: "fixed",
+          width: "77%",
+          boxSizing: "border-box",
+          backdropFilter: "blur(12px)",
+          pt: 6,
+          pb: 1,
+          zIndex: 1000,
         }}
       >
         <Box>
@@ -60,7 +59,7 @@ const Header = ({title, caption}) => {
             variant="body1"
             sx={{ color: "#8f8f8f", fontWeight: 500 }}
           >
-           {caption}
+            {caption}
           </Typography>
         </Box>
         <Box>
@@ -75,9 +74,13 @@ const Header = ({title, caption}) => {
             <Typography sx={{ color: "#C56000", fontSize: "10px" }}>
               3 Reservations Today
             </Typography>
-
           </Box>
-          <Typography variant="body2" sx={{color:'#8f8f8f', mt:1, fontWeight:500}}>{formatDate()}</Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: "#8f8f8f", mt: 1, fontWeight: 500 }}
+          >
+            {formatDate()}
+          </Typography>
         </Box>
       </Box>
     </>
