@@ -75,26 +75,9 @@ const getProflie = () => {
   return apiClient.get("/merchant/profile");
 };
 
-const editProfile = (
-  spot_name,
-  address,
-  logo,
-  images,
-  tags,
-  contact_person_name,
-  contact_person_email,
-  contact_person_phoneNumber,
-  agreed_commission,
-  short_location,
-  google_map_link,
-  instagram_link,
-  max_guest_size,
-  establishment_description,
-  city
-) => {
+const editProfile = (logo, images, tags, back_phone_number, instagram_link, max_guest_size) => {
   const formData = new FormData();
-  formData.append("spot_name", spot_name);
-  formData.append("address", address);
+
   formData.append("logo", logo);
   images.slice(0, 10).map((image, index) => {
     formData.append(`images[${index}]`, image);
@@ -102,16 +85,11 @@ const editProfile = (
   tags.map((tag, index) => {
     formData.append(`tags[${index}]`, tag);
   });
-  formData.append("contact_person_name", contact_person_name);
-  formData.append("contact_person_email", contact_person_email);
-  formData.append("contact_person_phoneNumber", contact_person_phoneNumber);
-  formData.append("agreed_commission", agreed_commission);
-  formData.append("short_location", short_location);
-  formData.append("google_map_link", google_map_link);
+  formData.append("back_phone_number", back_phone_number);
   formData.append("instagram_link", instagram_link);
   formData.append("max_guest_size", max_guest_size);
-  formData.append("establishment_description", establishment_description);
-  formData.append("city", city);
+
+
 
   return apiClient.post(`/merchant/contact-details/?_method=PUT`, formData);
 };
@@ -164,6 +142,10 @@ const deleteMenuItem = (id, name) => {
   return apiClient.delete(`/merchant/menu-item/${id}`, { name });
 };
 
+const getAllMenuItem = () => {
+  return apiClient.get("/merchant/menu-items");
+};
+
 const getClassificationMenu = (id) => {
   return apiClient.get(`/merchant/menu/${id}`);
 };
@@ -204,6 +186,13 @@ const editMenuItem = (
   return apiClient.post(`/merchant/menu-item/${id}?_method=PUT`, formData);
 };
 
+const relistMenu = (id) => {
+  return apiClient.put(`/merchant/relist/menu-item/${id}`);
+};
+const delistMenu = (id) => {
+  return apiClient.put(`/merchant/delist/menu-item/${id}`);
+};
+
 export {
   login,
   team_login,
@@ -225,4 +214,8 @@ export {
   addMenuItem,
   editMenuItem,
   deleteMenuItem,
+  editProfile,
+  getAllMenuItem,
+  relistMenu,
+  delistMenu,
 };

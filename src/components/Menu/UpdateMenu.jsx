@@ -10,7 +10,7 @@ import {
   InputAdornment,
   MenuItem,
   Avatar,
-  Modal
+  Modal,
 } from "@mui/material";
 import cancelIcon from "../../assets/icons/cancel.svg";
 import galleryIcon from "../../assets/icons/gallery.svg";
@@ -59,15 +59,17 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
   useEffect(() => {
     if (data) {
       setName(data?.name);
-      setMenuClassId(data?.id);
+      setMenuClassId(data?.menu_classification?.menu_class_id);
       setDescription(data?.description);
       setUnitPrice(data?.unit_price);
       setMaxGuestServing(data?.max_guest_serving);
       setSelectedFileURL(data?.image);
-      setSelectedFile(data?.image)
+      setSelectedFile(data?.image);
       setId(data?.id);
     }
   }, [data]);
+
+  
 
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(" ");
@@ -110,7 +112,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
   };
 
   const handleEditItem = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     await editMenuItem(
       id,
       name,
@@ -139,7 +141,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
   };
   return (
     <>
-          {isLoading && <Loader />}
+      {isLoading && <Loader />}
       <Drawer anchor="right" open={open} onClose={onClose}>
         <Box
           sx={{
@@ -396,11 +398,11 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
         </Box>
       </Drawer>
 
-          <Modal
+      <Modal
         open={open2}
-        onClose={() =>{
-
-        setOpen2(false)}}
+        onClose={() => {
+          setOpen2(false);
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

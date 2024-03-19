@@ -15,7 +15,7 @@ import {
   Modal,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
-import { getProflie } from "../../../api";
+import { editProfile, getProflie } from "../../../api";
 import plus from "../../../assets/icons/plus.svg";
 import minus from "../../../assets/icons/minus.svg";
 import Loader from "../../common/Loader";
@@ -32,6 +32,31 @@ const ProfileDetails = () => {
   const [instaLink, setInstaLink] = useState("");
   const [maxGuest, setMaxGuest] = useState(0);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [spot_name, setSpot_Name] = useState("");
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("")
+  const [commission, setCommission] = useState("");
+  const [location, setLocation] = useState("")
+
+  useEffect(() => {
+    setInstaLink(data?.instagram_link);
+    setMaxGuest(data?.max_guest_size);
+    setSelectedFileURL(data?.logo);
+    setSpot_Name(data?.spot_name);
+    setAddress(data?.address);
+    setName(data?.contact_person);
+    setEmail(data?.email_address);
+    setPhone(data?.phone_number)
+    setCommission(data?.agreed_commission)
+    setLocation(data?.short_location)
+
+  }, [data]);
+
+  const handleEditProfile = async () => {
+    await editProfile(spot_name, address, selectedFile, selectedImages);
+  };
 
   const handleAlert = (message, variant) => {
     enqueueSnackbar(message, { variant });
@@ -46,7 +71,7 @@ const ProfileDetails = () => {
 
   const [selectedFileURL, setSelectedFileURL] = useState(null);
 
-    const handleFileSelect = (event) => {
+  const handleFileSelect = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
 
@@ -102,12 +127,6 @@ const ProfileDetails = () => {
       setSelectedTags([...selectedTags, title]);
     }
   };
-
-  useEffect(() => {
-    setInstaLink(data?.instagram_link);
-    setMaxGuest(data?.max_guest_size);
-    setSelectedFileURL(data?.logo)
-  }, [data]);
 
   const handlePlus = () => {
     setMaxGuest((prev) => prev + 1);
@@ -238,7 +257,7 @@ const ProfileDetails = () => {
                 >
                   Click to change Logo
                 </Typography>
-                         <input
+                <input
                   type="file"
                   ref={fileInputRef}
                   accept="image/*"

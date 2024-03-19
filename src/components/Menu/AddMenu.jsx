@@ -59,11 +59,18 @@ const AddMenu = ({ selectData, action }) => {
     fileInputRef.current.click(); // Trigger file input click
   };
   const [selectedFileURL, setSelectedFileURL] = useState(null);
+      const maxFileSize = 1 * 1024 * 1024;
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
+      if (file.size > maxFileSize) {
 
-    if (file) {
+      alert("File size is too large. Please choose a smaller file.");
+
+      }
+      else{
+
+        setSelectedFile(file);
+          if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const dataURL = e.target.result;
@@ -71,7 +78,12 @@ const AddMenu = ({ selectData, action }) => {
       };
       reader.readAsDataURL(file);
     }
+      }
+
+  
   };
+
+
 
   const wordsArray = description.split(/\s+/);
 
@@ -94,7 +106,6 @@ const AddMenu = ({ selectData, action }) => {
   };
 
   const handleAddMenuClass = async () => {
-
     if (
       !name ||
       !menu_class_id ||
@@ -121,14 +132,14 @@ const AddMenu = ({ selectData, action }) => {
         setOpen(false);
         action();
 
-        setMaxGuestServing("")
-        setUnitPrice("")
-        setDescription("")
+        setMaxGuestServing("");
+        setUnitPrice("");
+        setDescription("");
       })
       .catch((err) => {
         setIsLoading(false);
         console.log(err);
-        handleAlert(`${err.response.data.message}`, "error");
+        handleAlert(`${err.message}`, "error");
       });
   };
 
@@ -410,9 +421,9 @@ const AddMenu = ({ selectData, action }) => {
 
       <Modal
         open={open2}
-        onClose={() =>{
-
-        setOpen2(false)}}
+        onClose={() => {
+          setOpen2(false);
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

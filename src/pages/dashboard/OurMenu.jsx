@@ -33,6 +33,9 @@ import {
   getMenuList,
   deleteMenuClass,
   deleteMenuItem,
+  getAllMenuItem,
+  relistMenu,
+  delistMenu,
 } from "../../api";
 import AddMenu from "../../components/Menu/AddMenu";
 import UpdateMenu from "../../components/Menu/UpdateMenu";
@@ -60,6 +63,7 @@ const OurMenu = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDeleteItem, setOpenDeleteItem] = useState(false);
   const [openDeleteClass, setOpenDeleteClass] = useState(false);
+  const [allMenu, setAllMenu] = useState(null);
   const handleClose = () => {
     setOpen(false);
     if (isSuccess) {
@@ -72,7 +76,7 @@ const OurMenu = () => {
   const [isEdit, setEdit] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [name, setName] = useState("");
-  const [menuId, setMenuId] = useState("");
+  const [menuId, setMenuId] = useState(null);
   const [menuClassData, setMenuClassData] = useState(null);
   const [editData, setEditData] = useState(null);
   const [isItemEmpty, setIsItemEmpty] = useState(false);
@@ -80,7 +84,7 @@ const OurMenu = () => {
   const handleAlert = (message, variant) => {
     enqueueSnackbar(message, { variant });
   };
-  const [active, setIsActive] = useState("");
+  const [active, setIsActive] = useState(false);
   const handleCloseDrawer = () => {
     setDrawer(false);
   };
@@ -140,14 +144,16 @@ const OurMenu = () => {
         handleAlert(`${err.response.data.message}`, "error");
       });
   };
+
   const handleDeleteMenuItem = async () => {
+    setAnchorEl(null);
     setIsLoading(true);
     console.log(editData?.id, editData?.name);
     await deleteMenuItem(editData?.id, editData?.name)
       .then((res) => {
         setIsLoading(false);
         setIsSuccess(true);
-        handleGetClassMenu();
+        handleGetAllMenuItems();
       })
       .catch((err) => {
         setIsLoading(false);
@@ -171,9 +177,23 @@ const OurMenu = () => {
       });
   };
 
-  const handleMenuClick = (id) => {
-    handleGetClassMenu();
+  const handleGetAllMenuItems = async () => {
+    setIsLoading(true);
+    await getAllMenuItem()
+      .then((res) => {
+        setIsLoading(false);
+        console.log(res?.data?.data);
+        setAllMenu(res?.data?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
   };
+
+  useEffect(() => {
+    handleGetAllMenuItems();
+  }, []);
 
   const openPopper = Boolean(anchorEl);
   const id = openPopper ? "simple-popover" : undefined;
@@ -214,23 +234,59 @@ const OurMenu = () => {
       });
   };
 
-  useEffect(() => {
-    if (menuData) {
-      setIsActive(menuData[0]?.id);
-      setMenuId(menuData[0]?.id);
-    }
-  }, [menuData]);
+  // useEffect(() => {
+  //   if (menuData) {
+  //     setIsActive(menuData[0]?.id);
+  //     setMenuId(menuData[0]?.id);
+  //   }
+  // }, [menuData]);
   useEffect(() => {
     if (menuId) {
       handleGetClassMenu();
     }
   }, [menuId]);
 
+  //   useEffect(()=>{
+  // if(active === null){
+  //   handleGetAllMenuItems()
+  // }
+  //   }, [active])
+
+  console.log(active);
   useEffect(() => {
     hadleGetMenuList();
   }, []);
 
   const table_id = menuData && menuData[0]?.id;
+
+  const handleRelist = async (id) => {
+    setIsLoading(true);
+    await relistMenu(id)
+      .then((res) => {
+        setIsLoading(false);
+        handleAlert(`Relist Successful`, "success");
+        hadleGetMenuList()
+        handleGetAllMenuItems();
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
+  };
+  const handleDelist = async (id) => {
+    setIsLoading(true);
+    await delistMenu(id)
+      .then((res) => {
+        handleAlert(`Delist Successful`, "success");
+        setIsLoading(false);
+                hadleGetMenuList()
+        handleGetAllMenuItems();
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
+  };
 
   return (
     <>
@@ -407,21 +463,30 @@ const OurMenu = () => {
                 <Box
                   sx={{ display: "flex", alignItems: "center", columnGap: 3 }}
                 >
-                  <Typography
-                    color="error"
-                    sx={{
-                      textDecoration: "underline",
-                      cursor: "pointer",
-                      fontWeight: 700,
-                    }}
-                  >
-                    Clear Filter
-                  </Typography>
-                  <AddMenu selectData={menuData} action={hadleGetMenuList} />
+                  {menuId && (
+                    <Typography
+                      onClick={() => {
+                        handleGetAllMenuItems();
+                        setIsActive(false);
+                      }}
+                      color="error"
+                      sx={{
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        fontWeight: 700,
+                      }}
+                    >
+                      Clear Filter
+                    </Typography>
+                  )}
+                  <AddMenu
+                    selectData={menuData}
+                    action={handleGetAllMenuItems}
+                  />
                 </Box>
               </Box>
               <Box sx={{ mt: 5 }}>
-                {!menuClassData || menuClassData?.items?.length === 0 ? (
+                {allMenu?.length === 0 || menuClassData?.items?.length === 0 ? (
                   <>
                     <Box
                       sx={{
@@ -472,52 +537,248 @@ const OurMenu = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {menuClassData?.items?.map((item, index) => (
-                          <TableRow key={index} sx={{ border: "none" }}>
-                            <TableCell sx={{ border: "none" }}>
-                              <Avatar src={item?.image} variant="rounded" />
-                            </TableCell>
-                            <TableCell
-                              sx={{
-                                border: "none",
-                                color: "#151515",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {item?.name}
-                            </TableCell>
-                            <TableCell
-                              sx={{
-                                border: "none",
-                                color: "#151515",
-                                fontWeight: 500,
-                              }}
-                            >
-                              N {item?.unit_price?.toLocaleString()}
-                            </TableCell>
-                            <TableCell
-                              sx={{
-                                border: "none",
-                                color: "#151515",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {item?.resv_count}
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{
-                                border: "none",
-                              }}
-                            >
-                              <IconButton
-                                onClick={(e) => handleOpenPopper(e, item)}
-                              >
-                                <img aria-describedby={id} src={moreIcon} />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {active && (
+                          <>
+                            {menuClassData?.items?.map((item, index) => (
+                              <TableRow key={index} sx={{ border: "none" }}>
+                                <TableCell sx={{ border: "none" }}>
+                                  <Avatar src={item?.image} variant="rounded" />
+                                </TableCell>
+                                <TableCell
+                                  sx={{
+                                    border: "none",
+                                    color: "#151515",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  {item?.name}
+                                </TableCell>
+                                <TableCell
+                                  sx={{
+                                    border: "none",
+                                    color: "#151515",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  N {item?.unit_price?.toLocaleString()}
+                                </TableCell>
+                                <TableCell
+                                  sx={{
+                                    border: "none",
+                                    color: "#151515",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  {item?.resv_count}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{
+                                    border: "none",
+                                  }}
+                                >
+                                  <IconButton
+                                    onClick={(e) => handleOpenPopper(e, item)}
+                                  >
+                                    <img aria-describedby={id} src={moreIcon} />
+                                  </IconButton>
+                                </TableCell>
+                                <Popover
+                                  id={id}
+                                  open={openPopper}
+                                  anchorEl={anchorEl}
+                                  onClose={handleClosePoper}
+                                  anchorOrigin={{
+                                    vertical: "center",
+                                    horizontal: "left",
+                                  }}
+                                  transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                  }}
+                                >
+                                  <Box sx={{ width: "180px", py: 2, px: 1 }}>
+                                    <MenuItem
+                                      onClick={() => {
+                                        setDrawer(true);
+                                        setEdit(false);
+                                        handleClosePoper();
+                                      }}
+                                      sx={{ color: "#151515", mt: 0.5, py: 1 }}
+                                    >
+                                      View Details
+                                    </MenuItem>
+                                    <MenuItem
+                                      onClick={() => {
+                                        setDrawer(true);
+                                        setEdit(true);
+                                        handleClosePoper();
+                                      }}
+                                      sx={{ color: "#151515", mt: 0.5, py: 1 }}
+                                    >
+                                      Edit Menu Item
+                                    </MenuItem>
+                                    {item?.delisted === false ? (
+                                      <MenuItem
+                                        onClick={() => {
+                                          handleDelist(editData?.id);
+                                        }}
+                                        sx={{
+                                          color: "#FFB872",
+                                          mt: 0.5,
+                                          py: 1,
+                                        }}
+                                      >
+                                        Delist Menu Item
+                                      </MenuItem>
+                                    ) : (
+                                      <MenuItem
+                                        onClick={() => {
+                                          handleRelist(editData?.id);
+                                        }}
+                                        sx={{
+                                          color: "#007E23",
+                                          mt: 0.5,
+                                          py: 1,
+                                        }}
+                                      >
+                                        Relist Menu Item
+                                      </MenuItem>
+                                    )}
+
+                                    <MenuItem
+                                      onClick={() => setOpenDeleteItem(true)}
+                                      sx={{ color: "#A71200", mt: 0.5, py: 1 }}
+                                    >
+                                      Delete Menu Item
+                                    </MenuItem>
+                                  </Box>
+                                </Popover>
+                              </TableRow>
+                            ))}
+                          </>
+                        )}
+                        {!active && (
+                          <>
+                            {allMenu?.map((item, index) => (
+                              <TableRow key={index} sx={{ border: "none" }}>
+                                <TableCell sx={{ border: "none" }}>
+                                  <Avatar src={item?.image} variant="rounded" />
+                                </TableCell>
+                                <TableCell
+                                  sx={{
+                                    border: "none",
+                                    color: "#151515",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  {item?.name}
+                                </TableCell>
+                                <TableCell
+                                  sx={{
+                                    border: "none",
+                                    color: "#151515",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  N {item?.unit_price?.toLocaleString()}
+                                </TableCell>
+                                <TableCell
+                                  sx={{
+                                    border: "none",
+                                    color: "#151515",
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  {item?.resv_count}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  sx={{
+                                    border: "none",
+                                  }}
+                                >
+                                  <IconButton
+                                    onClick={(e) => handleOpenPopper(e, item)}
+                                  >
+                                    <img aria-describedby={id} src={moreIcon} />
+                                  </IconButton>
+                                </TableCell>
+                                <Popover
+                                  id={id}
+                                  open={openPopper}
+                                  anchorEl={anchorEl}
+                                  onClose={handleClosePoper}
+                                  anchorOrigin={{
+                                    vertical: "center",
+                                    horizontal: "left",
+                                  }}
+                                  transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                  }}
+                                >
+                                  <Box sx={{ width: "180px", py: 2, px: 1 }}>
+                                    <MenuItem
+                                      onClick={() => {
+                                        setDrawer(true);
+                                        setEdit(false);
+                                        handleClosePoper();
+                                      }}
+                                      sx={{ color: "#151515", mt: 0.5, py: 1 }}
+                                    >
+                                      View Details
+                                    </MenuItem>
+                                    <MenuItem
+                                      onClick={() => {
+                                        setDrawer(true);
+                                        setEdit(true);
+                                        handleClosePoper();
+                                      }}
+                                      sx={{ color: "#151515", mt: 0.5, py: 1 }}
+                                    >
+                                      Edit Menu Item
+                                    </MenuItem>
+                                    {item?.delisted === false ? (
+                                      <MenuItem
+                                        onClick={() => {
+                                          handleDelist(editData?.id);
+                                        }}
+                                        sx={{
+                                          color: "#FFB872",
+                                          mt: 0.5,
+                                          py: 1,
+                                        }}
+                                      >
+                                        Delist Menu Item
+                                      </MenuItem>
+                                    ) : (
+                                      <MenuItem
+                                        onClick={() => {
+                                          handleRelist(editData?.id);
+                                        }}
+                                        sx={{
+                                          color: "#007E23",
+                                          mt: 0.5,
+                                          py: 1,
+                                        }}
+                                      >
+                                        Relist Menu Item
+                                      </MenuItem>
+                                    )}
+
+                                    <MenuItem
+                                      onClick={() => setOpenDeleteItem(true)}
+                                      sx={{ color: "#A71200", mt: 0.5, py: 1 }}
+                                    >
+                                      Delete Menu Item
+                                    </MenuItem>
+                                  </Box>
+                                </Popover>
+                              </TableRow>
+                            ))}
+                          </>
+                        )}
                       </TableBody>
                     </Table>
                   </>
@@ -620,9 +881,14 @@ const OurMenu = () => {
                     variant="contained"
                     disabled={!name}
                     onClick={handleAddMenuClass}
-                    sx={{ borderRadius: "7px", py: 1, '&:disabled':{
-                      color:'#fff', background: "#5b5b5b"
-                    } }}
+                    sx={{
+                      borderRadius: "7px",
+                      py: 1,
+                      "&:disabled": {
+                        color: "#fff",
+                        background: "#5b5b5b",
+                      },
+                    }}
                   >
                     Add Classification
                   </Button>
@@ -987,53 +1253,6 @@ const OurMenu = () => {
           )}
         </Box>
       </Modal>
-
-      <Popover
-        id={id}
-        open={openPopper}
-        anchorEl={anchorEl}
-        onClose={handleClosePoper}
-        anchorOrigin={{
-          vertical: "center",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <Box sx={{ width: "180px", py: 2, px: 1 }}>
-          <MenuItem
-            onClick={() => {
-              setDrawer(true);
-              setEdit(false);
-              handleClosePoper();
-            }}
-            sx={{ color: "#151515", mt: 0.5, py: 1 }}
-          >
-            View Details
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setDrawer(true);
-              setEdit(true);
-              handleClosePoper();
-            }}
-            sx={{ color: "#151515", mt: 0.5, py: 1 }}
-          >
-            Edit Menu Item
-          </MenuItem>
-          <MenuItem sx={{ color: "#007E23", mt: 0.5, py: 1 }}>
-            Relist Menu Item
-          </MenuItem>
-          <MenuItem
-            onClick={() => setOpenDeleteItem(true)}
-            sx={{ color: "#A71200", mt: 0.5, py: 1 }}
-          >
-            Delete Menu Item
-          </MenuItem>
-        </Box>
-      </Popover>
 
       <UpdateMenu
         open={drawer}
