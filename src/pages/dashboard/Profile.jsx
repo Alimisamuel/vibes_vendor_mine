@@ -15,6 +15,7 @@ const Profile = () => {
       <Box sx={{ mt: 15, display: "flex", columnGap: 3 }}>
         <ProfileSidebar />
         <Box
+        className="hide_scrollbar"
           sx={{
             bgcolor: "#fff",
             width: `calc(100% - ${NAVWIDTH}px)`,
@@ -23,9 +24,7 @@ const Profile = () => {
             p: 4,
             height: "80vh",
             overflow: "scroll",
-            '&::-webkit-scrollbar':{
-              display:'none'
-            }
+   
           }}
         >
           <Outlet />

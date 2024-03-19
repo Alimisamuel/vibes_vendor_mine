@@ -14,6 +14,11 @@ a{
 }
 .hide_scrollbar::-webkit-scrollbar{
   display: none;
+
+}
+.hide_scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
@@ -25,6 +30,8 @@ input[type=number]::-webkit-outer-spin-button {
   transition: 0.2s all linear ease-in;
   animation: moveBackground 10s linear infinite;
 }
+
+
 
 @keyframes moveBackground {
   0% {

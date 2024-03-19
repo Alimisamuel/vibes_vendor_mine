@@ -84,9 +84,10 @@ const Reset = () => {
         </Box>
         <Box sx={{ mt: 4 }}>
           <Button
+          disabled={error || !email}
             onClick={handleForgotPassword}
             variant="contained"
-            sx={{ height: "63px", width: "300px", borderRadius: "10px" }}
+            sx={{ height: "63px", width: "300px", borderRadius: "10px",                 "&:disabled": { background: "#5b5b5b", color: "#fff" }, }}
           >
             {" "}
             Reset Password{" "}
@@ -96,7 +97,7 @@ const Reset = () => {
           <Link to="/login">
             <Typography
               variant="body1"
-              sx={{ color: "#F489FD", textDecoration: "underline" }}
+              sx={{ color: "#F489FD", textDecoration: "underline" ,  }}
             >
               Back to Login
             </Typography>

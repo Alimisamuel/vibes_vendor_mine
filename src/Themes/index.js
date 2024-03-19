@@ -6,14 +6,24 @@ const Theme = createTheme({
       main: "#75007E",
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        disabled: {
+    background: "#5b5b5b"
+      
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: "outfit",
-    color:'#fff',
+    color: "#fff",
     h1: {
       fontSize: "32px",
       color: "#121417",
       fontWeight: 900,
-      color:'#fff'
+      color: "#fff",
     },
     h2: {
       fontSize: "24px",
@@ -21,54 +31,49 @@ const Theme = createTheme({
       fontWeight: 700,
       fontFamily: "butler",
     },
-    h3:{
-        fontSize: "20px",
-        color: "#151515",
-        fontWeight: 700,
-        fontFamily: "outfit", 
-      
+    h3: {
+      fontSize: "20px",
+      color: "#151515",
+      fontWeight: 700,
+      fontFamily: "outfit",
     },
-    h6:{
+    h6: {
       fontSize: "12px",
       color: "#151515",
       fontWeight: 700,
       fontFamily: "outfit",
     },
-    body1:{
-        fontSize: "14px",
-        color: "#fff",
-        fontWeight: 400,
-        fontFamily: "outfit", 
-        lineHeight:'20px' 
+    body1: {
+      fontSize: "14px",
+      color: "#fff",
+      fontWeight: 400,
+      fontFamily: "outfit",
+      lineHeight: "20px",
     },
-    body2:{
-        fontSize: "13px",
-        color: "#121417",
-        fontWeight: 400,
-        fontFamily: "outfit", 
-      
-
+    body2: {
+      fontSize: "13px",
+      color: "#121417",
+      fontWeight: 400,
+      fontFamily: "outfit",
     },
-    subtitle1:{
+    subtitle1: {
       fontSize: "13px",
       color: "#151515",
       fontWeight: 500,
       fontFamily: "outfit",
     },
-    subtitle2:{
-        fontSize: "12px",
-        color: "#8f8f8f",
-        fontWeight: 500,
-        fontFamily: "outfit",
+    subtitle2: {
+      fontSize: "12px",
+      color: "#8f8f8f",
+      fontWeight: 500,
+      fontFamily: "outfit",
     },
-    button:{
-        textTransform:'initial',
-        fontFamily:'outfit',
+    button: {
+      textTransform: "initial",
+      fontFamily: "outfit",
      
-    }
+    },
   },
-
-
 });
 
 export default Theme;

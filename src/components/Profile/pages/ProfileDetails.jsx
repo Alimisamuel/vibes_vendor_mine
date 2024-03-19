@@ -12,8 +12,9 @@ import {
   InputLabel,
   TextField,
   InputAdornment,
+  Modal,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { getProflie } from "../../../api";
 import plus from "../../../assets/icons/plus.svg";
 import minus from "../../../assets/icons/minus.svg";
@@ -22,21 +23,81 @@ import Info from "../../common/Info";
 import delIcon from "../../../assets/icons/del.svg";
 import gallery from "../../../assets/icons/gallery.svg";
 import TagConfig from "../../../assets/Data/TagConfig";
+import { useSnackbar } from "notistack";
 
 const ProfileDetails = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [instaLink, setInstaLink] = useState("");
   const [maxGuest, setMaxGuest] = useState(0);
   const [selectedTags, setSelectedTags] = useState([]);
 
-   const handleTagSelection = (title) => {
+  const handleAlert = (message, variant) => {
+    enqueueSnackbar(message, { variant });
+  };
+
+  const fileInputRef = useRef(null);
+
+  const [selectedFile, setSelectedFile] = useState(" ");
+  const handleButtonClick = () => {
+    fileInputRef.current.click(); // Trigger file input click
+  };
+
+  const [selectedFileURL, setSelectedFileURL] = useState(null);
+
+    const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataURL = e.target.result;
+        setSelectedFileURL(dataURL);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const [imageUrls, setImageUrls] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  console.log(imageUrls);
+
+  const handleImageChange = (e) => {
+    const files = e.target.files;
+
+    // Update selectedImages state with the selected image files
+    setSelectedImages((prevImages) => [...prevImages, ...files]);
+
+    // Read and store URLs of the selected images
+    const urls = [];
+    for (const file of files) {
+      const url = URL.createObjectURL(file);
+      urls.push(url);
+    }
+    setImageUrls((prevUrls) => [...prevUrls, ...urls]);
+  };
+
+  const handleRemoveImage = (index) => {
+    // Remove the selected image and URL from the states
+    const updatedSelectedImages = [...selectedImages];
+    updatedSelectedImages.splice(index, 1);
+    setSelectedImages(updatedSelectedImages);
+
+    const updatedImageUrls = [...imageUrls];
+    updatedImageUrls.splice(index, 1);
+    setImageUrls(updatedImageUrls);
+  };
+
+  const handleTagSelection = (title) => {
     // Check if the item is already selected
     const isSelected = selectedTags.includes(title);
 
     // If selected, remove it from the array, otherwise add it
     if (isSelected) {
-      setSelectedTags(selectedTags.filter(itemId => itemId !== title));
+      setSelectedTags(selectedTags.filter((itemId) => itemId !== title));
     } else {
       setSelectedTags([...selectedTags, title]);
     }
@@ -45,6 +106,7 @@ const ProfileDetails = () => {
   useEffect(() => {
     setInstaLink(data?.instagram_link);
     setMaxGuest(data?.max_guest_size);
+    setSelectedFileURL(data?.logo)
   }, [data]);
 
   const handlePlus = () => {
@@ -100,8 +162,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
-                       fontWeight:500
-                
+                    fontWeight: 500,
                   },
                 }}
               />
@@ -126,7 +187,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
-                       fontWeight:500
+                    fontWeight: 500,
                   },
                 }}
               />
@@ -157,7 +218,7 @@ const ProfileDetails = () => {
                     width: "100%",
                     height: "100%",
                     borderRadius: "4px",
-                    background: `url('${data?.logo}')`,
+                    background: `url('${selectedFileURL}')`,
                     backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
@@ -166,6 +227,7 @@ const ProfileDetails = () => {
               </Box>
               <Box sx={{ mt: 2 }}>
                 <Typography
+                  onClick={handleButtonClick}
                   color="primary"
                   sx={{
                     textDecoration: "underline",
@@ -176,6 +238,13 @@ const ProfileDetails = () => {
                 >
                   Click to change Logo
                 </Typography>
+                         <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleFileSelect}
+                />
               </Box>
             </Box>
           </Grid>
@@ -208,7 +277,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
-                       fontWeight:500
+                    fontWeight: 500,
                   },
                 }}
               />
@@ -231,7 +300,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
-                       fontWeight:500
+                    fontWeight: 500,
                   },
                 }}
               />
@@ -254,7 +323,7 @@ const ProfileDetails = () => {
                     backgroundColor: "#dedede",
                     color: "#151515",
                     border: "1px solid #151515",
-                       fontWeight:500
+                    fontWeight: 500,
                   },
                 }}
               />
@@ -360,6 +429,11 @@ const ProfileDetails = () => {
                   <ImageCard image={image.image} />
                 </Grid>
               ))}
+              {imageUrls.map((url, index) => (
+                <Grid item md="120px" key={index} sx={{}}>
+                  <ImageCard image={url} deleteAction={handleRemoveImage} />
+                </Grid>
+              ))}
 
               <Grid item md="120px">
                 <Box
@@ -375,6 +449,7 @@ const ProfileDetails = () => {
                   }}
                 >
                   <Box
+                    onClick={handleButtonClick}
                     sx={{
                       width: "100%",
                       height: "100%",
@@ -397,6 +472,14 @@ const ProfileDetails = () => {
                     >
                       Click to add image
                     </Typography>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: "none" }}
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageChange}
+                    />
                   </Box>
                 </Box>
               </Grid>
@@ -411,43 +494,46 @@ const ProfileDetails = () => {
             <Box sx={{ mt: 2 }}>
               <Grid container spacing={2}>
                 {TagConfig.map((tag, index) => {
-    const isSelected = selectedTags.includes(tag.title);
-                  return(
-                  <Grid item md="93px"key={index}>
-                    <Box
-                    onClick={()=>handleTagSelection(tag.title)}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "93px",
-                        height: "93px",
-                        border: "1.35px solid #f4f4f4",
-                        borderRadius: 3,
-                        boxSizing: "border-box",
-                        cursor: "pointer",
-                        transition: "0.2s all linear",
-                        "&:hover": {
-                          border: "2px solid #75007E",
-                          // bgcolor:'#FCEDFE'
-                        },
-                     ...(
-                      isSelected && {
-                                 border: "1.35px solid #75007E",
-                          bgcolor:'#FCEDFE'
-                      }
-                     )
-                      }}
-                    >
-                      <img src={isSelected ? tag.activeIcon : tag.icon} />
-                      <Typography
-                        sx={{ fontSize: "12px", color:isSelected ? "#75007E": "#8f8f8f", mt: 1 }}
+                  const isSelected = selectedTags.includes(tag.title);
+                  return (
+                    <Grid item md="93px" key={index}>
+                      <Box
+                        onClick={() => handleTagSelection(tag.title)}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "93px",
+                          height: "93px",
+                          border: "1.35px solid #f4f4f4",
+                          borderRadius: 3,
+                          boxSizing: "border-box",
+                          cursor: "pointer",
+                          transition: "0.2s all linear",
+                          "&:hover": {
+                            border: "2px solid #75007E",
+                            // bgcolor:'#FCEDFE'
+                          },
+                          ...(isSelected && {
+                            border: "1.35px solid #75007E",
+                            bgcolor: "#FCEDFE",
+                          }),
+                        }}
                       >
-                        {tag.title}
-                      </Typography>
-                    </Box>
-                  </Grid>)
+                        <img src={isSelected ? tag.activeIcon : tag.icon} />
+                        <Typography
+                          sx={{
+                            fontSize: "12px",
+                            color: isSelected ? "#75007E" : "#8f8f8f",
+                            mt: 1,
+                          }}
+                        >
+                          {tag.title}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  );
                 })}
               </Grid>
             </Box>
@@ -460,7 +546,19 @@ const ProfileDetails = () => {
 
 export default ProfileDetails;
 
-const ImageCard = ({ image }) => {
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 500,
+  // bgcolor: "#151515",
+
+  boxShadow: 24,
+};
+
+const ImageCard = ({ image, deleteAction }) => {
+  const [open, setOpen] = useState(false);
   return (
     <>
       <Box
@@ -481,24 +579,64 @@ const ImageCard = ({ image }) => {
             sx={{ height: "100%", width: "100%" }}
           />
         ) : (
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              borderRadius: "4px",
-              background: `url('${image}')`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-            }}
-          >
-            <IconButton sx={{ mt: -4, ml: 12 }}>
+          <Box sx={{ width: "100%", height: "100%" }}>
+            <IconButton sx={{ mt: -4, ml: 12 }} onClick={deleteAction}>
               {" "}
               <img src={delIcon} />
             </IconButton>
+            <Box
+              onClick={() => setOpen(true)}
+              sx={{
+                mt: -2.5,
+                width: "100%",
+                height: "100%",
+                borderRadius: "4px",
+                background: `url('${image}')`,
+                backgroundSize: "cover",
+                cursor: "pointer",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+              }}
+            ></Box>
           </Box>
         )}
       </Box>
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box align="right" sx={{ mt: -5 }}>
+            <IconButton
+              sx={{ borderRadius: 1, px: 2 }}
+              onClick={() => setOpen(false)}
+            >
+              {" "}
+              <Typography sx={{ color: "#fff" }}>Close</Typography>
+            </IconButton>
+          </Box>
+
+          <Box
+            sx={{ mt: 0, bgcolor: "#000000b7", backdropFilter: "blur(0.5)" }}
+          >
+            <Box
+              sx={{
+                width: "500px",
+                height: "300px",
+                borderRadius: "4px",
+                background: `url('${image}')`,
+                backgroundSize: "contain",
+                cursor: "pointer",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+              }}
+            />
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 };

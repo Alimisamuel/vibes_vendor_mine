@@ -620,7 +620,9 @@ const OurMenu = () => {
                     variant="contained"
                     disabled={!name}
                     onClick={handleAddMenuClass}
-                    sx={{ borderRadius: "7px", py: 1 }}
+                    sx={{ borderRadius: "7px", py: 1, '&:disabled':{
+                      color:'#fff', background: "#5b5b5b"
+                    } }}
                   >
                     Add Classification
                   </Button>

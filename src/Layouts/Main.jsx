@@ -16,6 +16,7 @@ export default function Main({ children, sx, ...other }) {
     <Box
       component="main"
       sx={{
+
         flexGrow: 1,
         minHeight: 1,
         display: 'flex',
@@ -30,7 +31,8 @@ export default function Main({ children, sx, ...other }) {
       }}
       {...other}
     >
-        <Box className="hide_scrollbar" sx={{width:'95%', margin:'0 auto',pt:0, height:'100vh', overflow:'scroll',  boxSizing:'border-box', }}>
+        <Box className="hide_scrollbar" sx={{width:'95%', margin:'0 auto',pt:0, height:'100vh', overflow:'scroll',  overflowX:'hide',         boxSizing:'border-box',  
+       }}>
 
       {children}
         </Box>

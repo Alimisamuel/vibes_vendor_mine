@@ -75,6 +75,46 @@ const getProflie = () => {
   return apiClient.get("/merchant/profile");
 };
 
+const editProfile = (
+  spot_name,
+  address,
+  logo,
+  images,
+  tags,
+  contact_person_name,
+  contact_person_email,
+  contact_person_phoneNumber,
+  agreed_commission,
+  short_location,
+  google_map_link,
+  instagram_link,
+  max_guest_size,
+  establishment_description,
+  city
+) => {
+  const formData = new FormData();
+  formData.append("spot_name", spot_name);
+  formData.append("address", address);
+  formData.append("logo", logo);
+  images.slice(0, 10).map((image, index) => {
+    formData.append(`images[${index}]`, image);
+  });
+  tags.map((tag, index) => {
+    formData.append(`tags[${index}]`, tag);
+  });
+  formData.append("contact_person_name", contact_person_name);
+  formData.append("contact_person_email", contact_person_email);
+  formData.append("contact_person_phoneNumber", contact_person_phoneNumber);
+  formData.append("agreed_commission", agreed_commission);
+  formData.append("short_location", short_location);
+  formData.append("google_map_link", google_map_link);
+  formData.append("instagram_link", instagram_link);
+  formData.append("max_guest_size", max_guest_size);
+  formData.append("establishment_description", establishment_description);
+  formData.append("city", city);
+
+  return apiClient.post(`/merchant/contact-details/?_method=PUT`, formData);
+};
 const changePassword = (password, password_confirmation) => {
   const payload = {
     password,
@@ -114,19 +154,19 @@ const addMenuClassification = (name) => {
   return apiClient.post("/merchant/menu-classification", { name });
 };
 
-const editMenuClass = (id, name) =>{
-  return apiClient.put(`/merchant/menu-classification/${id}`, {name})
-}
+const editMenuClass = (id, name) => {
+  return apiClient.put(`/merchant/menu-classification/${id}`, { name });
+};
 const deleteMenuClass = (id, name) => {
-  return apiClient.delete(`/merchant/menu-classification/${id}`, {name})
-}
+  return apiClient.delete(`/merchant/menu-classification/${id}`, { name });
+};
 const deleteMenuItem = (id, name) => {
-  return apiClient.delete(`/merchant/menu-item/${id}`, {name})
-}
+  return apiClient.delete(`/merchant/menu-item/${id}`, { name });
+};
 
-const getClassificationMenu = (id) =>{
-  return apiClient.get(`/merchant/menu/${id}`)
-}
+const getClassificationMenu = (id) => {
+  return apiClient.get(`/merchant/menu/${id}`);
+};
 
 const addMenuItem = (
   name,
@@ -143,7 +183,7 @@ const addMenuItem = (
   formData.append("image", image);
   formData.append("unit_price", unit_price);
   formData.append("description", description);
-  return apiClient.post('/merchant/menu', formData)
+  return apiClient.post("/merchant/menu", formData);
 };
 const editMenuItem = (
   id,
@@ -161,10 +201,8 @@ const editMenuItem = (
   formData.append("image", image);
   formData.append("unit_price", unit_price);
   formData.append("description", description);
-  return apiClient.post(`/merchant/menu-item/${id}?_method=PUT`, formData)
+  return apiClient.post(`/merchant/menu-item/${id}?_method=PUT`, formData);
 };
-
-
 
 export {
   login,
@@ -186,5 +224,5 @@ export {
   getClassificationMenu,
   addMenuItem,
   editMenuItem,
-  deleteMenuItem
+  deleteMenuItem,
 };
