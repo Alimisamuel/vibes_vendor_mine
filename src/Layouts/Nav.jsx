@@ -7,6 +7,7 @@ import RouterLink from "../hooks/router-link";
 import navConfig from "./config-Navigation";
 import bgImg from "../assets/img/Rectangle 152158.jpg";
 import logo from "../assets/logo/single.svg";
+import Faqs from "../pages/dashboard/Faqs";
 
 const Nav = () => {
   return (
@@ -23,13 +24,16 @@ const Nav = () => {
           alignItems: "center",
         }}
       >
-        <Box sx={{mt:6}}>
+        <Box sx={{ mt: 6 }}>
           <img src={logo} />
         </Box>
-        <Stack component="nav" spacing={3} sx={{ px: 2, mt:7 }}>
+        <Stack component="nav" spacing={3} sx={{ px: 2, mt: 7 }}>
           {navConfig.map((item) => (
             <NavItem key={item.title} item={item} />
           ))}
+          <Box >
+            <Faqs />
+          </Box>
         </Stack>
       </Box>
     </>
@@ -67,10 +71,7 @@ function NavItem({ item }) {
       }}
     >
       <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
-        {
-            active ? item.icon2 : item.icon
-        }
-       
+        {active ? item.icon2 : item.icon}
       </Box>
 
       <Box component="span">{item.title} </Box>

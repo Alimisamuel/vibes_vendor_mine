@@ -5,11 +5,13 @@ import AllReservations from "../../components/Reservation/AllReservations";
 import ReservationView from "../../components/Reservation/ReservationView";
 import Card from "../../components/common/Card";
 import EmptyData from "../../components/common/EmptyData";
+import Comingsoon from "../Comingsoon";
 
 const Reservations = () => {
   return (
     <>
-      <Header
+    <Comingsoon/>
+      {/* <Header
         title="Reservations"
         caption="Review and manage your upcoming reservations "
       />
@@ -34,7 +36,7 @@ const Reservations = () => {
             <AllReservations />
           </Grid>
         </Grid>
-      </Box>
+      </Box> */}
     </>
   );
 };

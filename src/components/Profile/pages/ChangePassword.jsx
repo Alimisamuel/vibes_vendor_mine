@@ -9,6 +9,7 @@ import { useSnackbar } from "notistack";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import Loader from "../../common/Loader";
+import CustomOtpDark from "../../Custom/CustomOtpDark";
 
 const style = {
   position: "absolute",
@@ -28,7 +29,7 @@ const ChangePassword = () => {
   const [confrirmPassword, setConfirmPassword] = React.useState("");
   const [error, setError] = useState(false);
   const [visible, setVisible] = useState(true);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const handleChange = (newValue) => {
     // setError(false);
     setPassword(newValue);
@@ -50,39 +51,35 @@ const ChangePassword = () => {
   };
 
   const handleChangePassword = async () => {
-    setLoading(true)
+    setLoading(true);
     await changePassword(password, confrirmPassword)
       .then((res) => {
         setLoading(false);
-        if(res?.data?.status){
-       
-  setOpen(true)
+        if (res?.data?.status) {
+          setOpen(true);
         }
         console.log(res);
-      
       })
       .catch((err) => {
         setLoading(false);
         console.log(err);
-            handleAlert(`${err.message}`, "error")
+        handleAlert(`${err.message}`, "error");
       });
   };
 
   return (
     <>
-    {
-      loading && <Loader/>
-    }
+      {loading && <Loader />}
       <Box>
         <InputLabel sx={{ color: "#151515", mb: 1 }}>
           Enter new six (6) digit Password
         </InputLabel>
         <Box sx={{ display: "flex", alignItems: "center", columnGap: 2 }}>
-          <CustomOtp
+          <CustomOtpDark
             light={true}
             otp={password}
             handleChange={handleChange}
-            type={visible}
+            type={true}
           />
           <IconButton onClick={() => setVisible(!visible)}>
             {visible ? (
@@ -97,11 +94,11 @@ const ChangePassword = () => {
             Confirm Password (password must match)
           </Typography>
         ) : (
-          <Typography variant="body1" sx={{ mt: 3, color: "#151515" }}>
+          <Typography variant="body1" sx={{ mt: 3, color: "#151515", mb: 1 }}>
             Confirm six (6) digit Password
           </Typography>
         )}
-        <CustomOtp
+        <CustomOtpDark
           light={true}
           otp={confrirmPassword}
           handleChange={handleChange2}
@@ -117,7 +114,7 @@ const ChangePassword = () => {
               height: "63px",
               width: "300px",
               borderRadius: "10px",
-              "&:disabled": { background: "#5b5b5b" },
+              "&:disabled": { background: "#5b5b5b", color: "#fff" },
             }}
             disabled={error || !password || !confrirmPassword}
           >
@@ -145,7 +142,7 @@ const ChangePassword = () => {
               Your password has been successfully updated. Please login again.
             </Typography>
             <Link to="/login">
-              <Button variant="contained" sx={{ mt: 3, px: 6, py: 1 }} >
+              <Button variant="contained" sx={{ mt: 3, px: 6, py: 1 }}>
                 Login
               </Button>
             </Link>

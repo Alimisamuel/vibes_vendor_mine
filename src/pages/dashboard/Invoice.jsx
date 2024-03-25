@@ -4,12 +4,14 @@ import { Box, Button } from "@mui/material";
 import Card from "../../components/common/Card";
 import EmptyData from "../../components/common/EmptyData";
 import NewInvoice from "../../components/Invoice/NewInvoice";
+import Comingsoon from "../Comingsoon";
 
 const Invoice = () => {
   const [data, setData] = useState(null);
   return (
     <>
-      <Header
+    <Comingsoon/>
+      {/* <Header
         title={"Generate Invoice"}
         caption={"Easily collect payment from walk-in VibezsUp users"}
       />
@@ -32,7 +34,7 @@ const Invoice = () => {
             <></>
           )}
         </Card>
-      </Box>
+      </Box> */}
     </>
   );
 };

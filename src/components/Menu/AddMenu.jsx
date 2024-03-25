@@ -159,6 +159,7 @@ const AddMenu = ({ selectData, action }) => {
 
       <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
         <Box
+          className="hide_scrollbar"
           sx={{
             bgcolor: "#fff",
             height: "100vh",

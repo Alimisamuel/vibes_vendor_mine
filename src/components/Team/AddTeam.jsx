@@ -50,12 +50,14 @@ const AddTeam = ({action}) => {
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
-        handleAlert(`${err.message}`, "error");
+        handleAlert(`${err.request?.
+responseText}`, "error");
       });
   };
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
+    setCreated(false)
   };
 
   const handleCopy = (text) => {

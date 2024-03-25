@@ -48,6 +48,7 @@ const navConfig = [
         icon:<img src={icon6}/>,
         icon2:<img src={icon12}/>
     },
+ 
 ]
 
 

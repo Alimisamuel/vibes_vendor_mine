@@ -9,12 +9,15 @@ import Income from "../../components/AppWidgets/Income";
 import Upcoming from '../../components/AppWidgets/Upcoming'
 import Leads from "../../components/AppWidgets/Leads";
 import BestSeller from "../../components/AppWidgets/BestSeller";
+import Comingsoon from "../Comingsoon";
 
 
 const Dashboard = () => {
   return (
     <>
-      <Header
+
+    <Comingsoon/>
+      {/* <Header
         title="Dashboard"
         caption="An overview of your Business analytics and performance"
       />
@@ -45,7 +48,7 @@ const Dashboard = () => {
             <Leads/>
             </Grid>
         </Grid>
-      </Box>
+      </Box> */}
     </>
   );
 };

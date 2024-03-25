@@ -101,7 +101,7 @@ error={error}
             }
           
             <Box sx={{ mt: 1 }}>
-              <CustomOtp otp={otp} handleChange={handleChange} error={error} />
+              <CustomOtp      light={false}  otp={otp} handleChange={handleChange} error={error}    type={true}/>
             </Box>
           </Box>
 

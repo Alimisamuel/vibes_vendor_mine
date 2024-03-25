@@ -20,6 +20,7 @@ import menuIcon from "../../assets/icons/more.svg";
 import ViewDetails from "../../components/PendingOrders/ViewDetails";
 import Modal from "@mui/material/Modal";
 import summerImg from "../../assets/icons/summer.svg";
+import Comingsoon from "../Comingsoon";
 
 const style = {
   position: "absolute",
@@ -67,7 +68,9 @@ const PendingOrders = () => {
   const id = open ? "simple-popover" : undefined;
   return (
     <>
-      <Header
+
+    <Comingsoon/>
+      {/* <Header
         title="Pending Orders"
         caption="Accept or Reject reservation requests from prospective guests"
       />
@@ -130,7 +133,7 @@ All orders will appear here when a guest books a reservation from the app or onl
             </>
           )}
         </Card>
-      </Box>
+      </Box> */}
 
       <Popover
         id={id}
