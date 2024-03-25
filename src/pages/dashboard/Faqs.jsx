@@ -44,8 +44,7 @@ const Faqs = () => {
       })
       .catch((err) => {
         setIsLoading(false)
-      handleAlert(`${err.request?.
-responseText}`, "error");
+       handleAlert(`${err.response?.data?.message}`, "error");
         console.log(err);
       });
   };

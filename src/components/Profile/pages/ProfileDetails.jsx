@@ -31,14 +31,15 @@ const ProfileDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [instaLink, setInstaLink] = useState("");
   const [maxGuest, setMaxGuest] = useState(0);
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(null);
   const [spot_name, setSpot_Name] = useState("");
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("")
+  const [phone, setPhone] = useState("");
   const [commission, setCommission] = useState("");
-  const [location, setLocation] = useState("")
+  const [location, setLocation] = useState("");
+  const [backup_number, setBackupPhone] = useState(null);
 
   useEffect(() => {
     setInstaLink(data?.instagram_link);
@@ -48,14 +49,33 @@ const ProfileDetails = () => {
     setAddress(data?.address);
     setName(data?.contact_person);
     setEmail(data?.email_address);
-    setPhone(data?.phone_number)
-    setCommission(data?.agreed_commission)
-    setLocation(data?.short_location)
-
+    setPhone(data?.phone_number);
+    setCommission(data?.agreed_commission);
+    setLocation(data?.short_location);
+    setSelectedTags(data?.tag?.map((item) => item.id));
   }, [data]);
+  // console.log(location, "Loa")
 
   const handleEditProfile = async () => {
-    await editProfile(spot_name, address, selectedFile, selectedImages);
+    setIsLoading(true);
+    await editProfile(
+      selectedFile,
+      selectedImages,
+      selectedTags,
+      backup_number,
+      instaLink,
+      maxGuest
+    )
+      .then((res) => {
+        setIsLoading(false);
+        console.log(res);
+        handleAlert(`${res.data?.message}`, "success");
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
   };
 
   const handleAlert = (message, variant) => {
@@ -63,13 +83,18 @@ const ProfileDetails = () => {
   };
 
   const fileInputRef = useRef(null);
+  const fileInputRef2 = useRef(null);
 
   const [selectedFile, setSelectedFile] = useState(" ");
   const handleButtonClick = () => {
     fileInputRef.current.click(); // Trigger file input click
   };
+  const handleButtonClick2 = () => {
+    fileInputRef2.current.click(); // Trigger file input click
+  };
 
   const [selectedFileURL, setSelectedFileURL] = useState(null);
+
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -84,6 +109,7 @@ const ProfileDetails = () => {
       reader.readAsDataURL(file);
     }
   };
+
 
   const [imageUrls, setImageUrls] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
@@ -108,7 +134,7 @@ const ProfileDetails = () => {
   const handleRemoveImage = (index) => {
     // Remove the selected image and URL from the states
     const updatedSelectedImages = [...selectedImages];
-    updatedSelectedImages.splice(index, 1);
+    updatedSelectedImages?.splice(index, 1);
     setSelectedImages(updatedSelectedImages);
 
     const updatedImageUrls = [...imageUrls];
@@ -116,18 +142,18 @@ const ProfileDetails = () => {
     setImageUrls(updatedImageUrls);
   };
 
-  const handleTagSelection = (title) => {
+  const handleTagSelection = (id) => {
     // Check if the item is already selected
-    const isSelected = selectedTags.includes(title);
+    const isSelected = selectedTags.includes(id);
 
     // If selected, remove it from the array, otherwise add it
     if (isSelected) {
-      setSelectedTags(selectedTags.filter((itemId) => itemId !== title));
+      setSelectedTags(selectedTags.filter((itemId) => itemId !== id));
     } else {
-      setSelectedTags([...selectedTags, title]);
+      setSelectedTags([...selectedTags, id]);
     }
   };
-
+  console.log(selectedTags);
   const handlePlus = () => {
     setMaxGuest((prev) => prev + 1);
   };
@@ -356,6 +382,8 @@ const ProfileDetails = () => {
               <TextField
                 margin="dense"
                 sx={{}}
+                value={backup_number}
+                onChange={(e) => setBackupPhone(e.target.value)}
                 fullWidth
                 InputProps={{
                   style: {
@@ -468,7 +496,7 @@ const ProfileDetails = () => {
                   }}
                 >
                   <Box
-                    onClick={handleButtonClick}
+                    onClick={handleButtonClick2}
                     sx={{
                       width: "100%",
                       height: "100%",
@@ -493,7 +521,7 @@ const ProfileDetails = () => {
                     </Typography>
                     <input
                       type="file"
-                      ref={fileInputRef}
+                      ref={fileInputRef2}
                       style={{ display: "none" }}
                       accept="image/*"
                       multiple
@@ -513,11 +541,11 @@ const ProfileDetails = () => {
             <Box sx={{ mt: 2 }}>
               <Grid container spacing={2}>
                 {TagConfig.map((tag, index) => {
-                  const isSelected = selectedTags.includes(tag.title);
+                  const isSelected = selectedTags?.includes(tag.id);
                   return (
                     <Grid item md="93px" key={index}>
                       <Box
-                        onClick={() => handleTagSelection(tag.title)}
+                        onClick={() => handleTagSelection(tag.id)}
                         sx={{
                           display: "flex",
                           flexDirection: "column",
@@ -555,6 +583,15 @@ const ProfileDetails = () => {
                   );
                 })}
               </Grid>
+            </Box>
+            <Box sx={{ mt: 5 }}>
+              <Button
+                variant="contained"
+                sx={{ px: 6 }}
+                onClick={handleEditProfile}
+              >
+                Save Changes
+              </Button>
             </Box>
           </Box>
         </Box>

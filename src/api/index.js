@@ -79,24 +79,28 @@ const editProfile = (
   logo,
   images,
   tags,
-  back_phone_number,
-  instagram_link,
-  max_guest_size
+  backPhoneNumber,
+  instagramLink,
+  maxGuestSize
 ) => {
   const formData = new FormData();
 
   formData.append("logo", logo);
-  images.slice(0, 10).map((image, index) => {
+  images.slice(0, 10).forEach((image, index) => {
     formData.append(`images[${index}]`, image);
   });
-  tags.map((tag, index) => {
+  tags.forEach((tag, index) => {
     formData.append(`tags[${index}]`, tag);
   });
-  formData.append("back_phone_number", back_phone_number);
-  formData.append("instagram_link", instagram_link);
-  formData.append("max_guest_size", max_guest_size);
+  formData.append("back_phone_number", backPhoneNumber);
+  formData.append("instagram_link", instagramLink);
+  formData.append("max_guest_size", maxGuestSize);
 
-  return apiClient.post(`/merchant/contact-details/?_method=PUT`, formData);
+  return apiClient.put(`/merchant/contact-details/`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 const changePassword = (password, password_confirmation) => {
   const payload = {
@@ -204,9 +208,13 @@ const getFaq = () => {
 const updateTax = (value_added_tax, consumption_tax) => {
   const payload = {
     value_added_tax,
-    consumption_tax
+    consumption_tax,
   };
-  return apiClient.put("/merchant/update/tax",payload);
+  return apiClient.put("/merchant/update/tax", payload);
+};
+
+const updateOpeningHours = (openings) => {
+  return apiClient.put("/merchant/opening-hours", { openings });
 };
 
 export {
@@ -235,5 +243,6 @@ export {
   relistMenu,
   delistMenu,
   getFaq,
-  updateTax
+  updateTax,
+  updateOpeningHours,
 };

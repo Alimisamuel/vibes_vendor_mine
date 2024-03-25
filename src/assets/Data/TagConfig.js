@@ -44,96 +44,116 @@ import act19 from '../icons/tags/active/19.svg'
 
 const TagConfig = [
   {
+    id:1,
     icon:img1,
     title:"Luxe DIning",
     activeIcon :act1
   },
   {
+        id:2,
     icon:img2,
     title:"Nightlife",
     activeIcon :act2
   },
   {
+        id:3,
     icon:img3,
     title:"Bar/Drinks",
     activeIcon :act3
   },
   {
+        id:4,
     icon:img4,
     title:"Italian",
     activeIcon :act4
   },
   {
+        id:5,
     icon:img5,
     title:"Asian",
     activeIcon :act5
   },
   {
+        id:6,
     icon:img6,
     title:"Lounge",
     activeIcon :act6
   },
   {
+        id:7,
     icon:img7,
     title:"Cafe",
     activeIcon :act7
   },
   {
+        id:8,
     icon:img8,
     title:"Pastry",
     activeIcon :act8
   },
   {
+        id:9,
     icon:img9,
     title:"French",
     activeIcon :act9
   },
   {
+        id:10,
     icon:img10,
     title:"Rooftop",
     activeIcon :act10
   },
   {
+        id:11,
     icon:img11,
     title:"Dairy",
     activeIcon :act11
   },
   {
+        id:12,
     icon:img12,
     title:"Veggies",
     activeIcon :act12
   },
   {
+        id:13,
     icon:img13,
     title:"Seafood",
     activeIcon :act13
   },
   {
+        id:14,
     icon:img14,
     title:"Local Dishes",
     activeIcon :act14
   },
   {
+        id:15,
     icon:img15,
     title:"Pizzeria",
     activeIcon :act15
   },
   {
+
+        id:16,
     icon:img16,
     title:"Dinner Date",
     activeIcon :act16
   },
   {
+        id:17,
     icon:img17,
     title:"Lunch",
     activeIcon :act17
   },
   {
+        id:18,
     icon:img18,
     title:"Breakfast",
     activeIcon :act18
   },
   {
+        id:19,
     icon:img19,
     title:"Beachside",
     activeIcon :act19

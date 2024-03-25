@@ -50,8 +50,7 @@ const AddTeam = ({action}) => {
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
-        handleAlert(`${err.request?.
-responseText}`, "error");
+        handleAlert(`${err.response?.data?.message}`, "error");
       });
   };
 
