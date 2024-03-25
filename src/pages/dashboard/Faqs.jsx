@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ListItemButton,
   Box,
@@ -13,14 +13,51 @@ import AccordionActions from "@mui/material/AccordionActions";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useSnackbar } from "notistack";
+import { getFaq } from "../../api";
+import Loader from "../../components/common/Loader";
+import EmptyData from "../../components/common/EmptyData";
 
 const Faqs = () => {
+    const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+
+
+    const handleAlert = (message, variant) => {
+    enqueueSnackbar(message, { variant });
+  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState(null);
+
+  const handleGetFaq = async () => {
+    setIsLoading(true)
+    await getFaq()
+      .then((res) => {
+        setIsLoading(false)
+        if (res?.data?.status){
+        
+          setData(res?.data?.data)
+        } console.log(res);
+      })
+      .catch((err) => {
+        setIsLoading(false)
+      handleAlert(`${err.request?.
+responseText}`, "error");
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    handleGetFaq();
+  }, []);
   return (
     <>
+    {
+      isLoading && (<Loader/>)
+    }
       <ListItemButton
         onClick={toggleDrawer(true)}
         sx={{
@@ -74,7 +111,18 @@ const Faqs = () => {
           </Box>
 
           <Box sx={{ mt: 3 }}>
-            <Accordion sx={{ borderRadius: "8px", bgcolor: "none" }}>
+{
+  (!data || data?.length === 0) ? (
+    <>
+    <Box sx={{mt:4}}>
+      <EmptyData text="No Faqs available"/>
+    </Box>
+    </>
+  ):(
+    <>
+    {
+      data?.map((item, index)=>(
+                    <Accordion sx={{ borderRadius: "8px", bgcolor: "none", mb:3 }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1-content"
@@ -86,38 +134,20 @@ const Faqs = () => {
                   borderRadius: "8px",
                 }}
               >
-                How do I book a table on VibezsUp?
+             {item?.question}
               </AccordionSummary>
               <AccordionDetails
                 sx={{ bgcolor: "#f6f6f6", color: "#737373", fontSize: "12px" }}
               >
-                Browse through our extensive list of fine locations to book
-                specially curated tables for you and your guests. All prices are
-                tax inclusive for bills convenience
+             {item?.answer}
               </AccordionDetails>
             </Accordion>
-            <Accordion sx={{ borderRadius: "8px", bgcolor: "none", mt: 2 }}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
-                sx={{
-                  fontSize: "12px",
-                  fontWeight: 500,
-                  border: "1px solid #d7d7d7",
-                  borderRadius: "8px",
-                }}
-              >
-                How do I book a table on VibezsUp?
-              </AccordionSummary>
-              <AccordionDetails
-                sx={{ bgcolor: "#f6f6f6", color: "#737373", fontSize: "12px" }}
-              >
-                Browse through our extensive list of fine locations to book
-                specially curated tables for you and your guests. All prices are
-                tax inclusive for bills convenience
-              </AccordionDetails>
-            </Accordion>
+      ))
+    }
+    </>
+  )
+}
+       
           </Box>
         </Box>
       </Drawer>

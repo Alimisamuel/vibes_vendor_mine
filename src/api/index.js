@@ -75,7 +75,14 @@ const getProflie = () => {
   return apiClient.get("/merchant/profile");
 };
 
-const editProfile = (logo, images, tags, back_phone_number, instagram_link, max_guest_size) => {
+const editProfile = (
+  logo,
+  images,
+  tags,
+  back_phone_number,
+  instagram_link,
+  max_guest_size
+) => {
   const formData = new FormData();
 
   formData.append("logo", logo);
@@ -88,8 +95,6 @@ const editProfile = (logo, images, tags, back_phone_number, instagram_link, max_
   formData.append("back_phone_number", back_phone_number);
   formData.append("instagram_link", instagram_link);
   formData.append("max_guest_size", max_guest_size);
-
-
 
   return apiClient.post(`/merchant/contact-details/?_method=PUT`, formData);
 };
@@ -193,6 +198,10 @@ const delistMenu = (id) => {
   return apiClient.put(`/merchant/delist/menu-item/${id}`);
 };
 
+const getFaq = () => {
+  return apiClient.get(`/merchant/faqs`);
+};
+
 export {
   login,
   team_login,
@@ -218,4 +227,5 @@ export {
   getAllMenuItem,
   relistMenu,
   delistMenu,
+  getFaq
 };
