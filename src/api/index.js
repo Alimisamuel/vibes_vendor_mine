@@ -201,6 +201,13 @@ const delistMenu = (id) => {
 const getFaq = () => {
   return apiClient.get(`/merchant/faqs`);
 };
+const updateTax = (value_added_tax, consumption_tax) => {
+  const payload = {
+    value_added_tax,
+    consumption_tax
+  };
+  return apiClient.put("/merchant/update/tax",payload);
+};
 
 export {
   login,
@@ -227,5 +234,6 @@ export {
   getAllMenuItem,
   relistMenu,
   delistMenu,
-  getFaq
+  getFaq,
+  updateTax
 };

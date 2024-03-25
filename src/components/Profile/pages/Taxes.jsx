@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -10,10 +10,50 @@ import {
 } from "@mui/material";
 import Info from "../../common/Info";
 import Switch from "@mui/material/Switch";
+import { updateTax } from "../../../api";
+import Loader from "../../common/Loader";
+import { useSnackbar } from "notistack";
 
 const Taxes = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const [addedTax, setAddedTax] = useState(true);
+  const [consumptionTax, setConsumptionTax] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (event) => {
+    setAddedTax(event.target.checked);
+    handleUpdateTax();
+  };
+
+  const handleAlert = (message, variant) => {
+    enqueueSnackbar(message, { variant });
+  };
+
+  const handleChange2 = (event) => {
+    setConsumptionTax(event.target.checked);
+    handleUpdateTax();
+  };
+
+  console.log(addedTax, consumptionTax);
+
+  const handleUpdateTax = async () => {
+    setIsLoading(true);
+    await updateTax(addedTax, consumptionTax)
+      .then((res) => {
+        setIsLoading(false);
+        if (res?.data?.status) {
+          handleAlert(`${res.data?.message}`, "success");
+        }
+        console.log(res);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        handleAlert(`${err.response.data.message}`, "error");
+      });
+  };
   return (
     <>
+      {isLoading && <Loader />}
       <Box>
         <Typography variant="subtitle1">
           Taxes{" "}
@@ -34,7 +74,7 @@ const Taxes = () => {
           </Box>
 
           <Box>
-            <Switch size="medium" />
+            <Switch checked={addedTax} size="medium" onChange={handleChange} />
           </Box>
         </Box>
 
@@ -54,7 +94,11 @@ const Taxes = () => {
             </Typography>
           </Box>
           <Box>
-            <Switch size="medium" />
+            <Switch
+              checked={consumptionTax}
+              size="medium"
+              onChange={handleChange2}
+            />
           </Box>
         </Box>
       </Box>
