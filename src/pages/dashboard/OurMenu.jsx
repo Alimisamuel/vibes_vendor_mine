@@ -352,7 +352,7 @@ const OurMenu = () => {
                       }}
                     >
                       {menuClassificationData &&
-                        menuClassificationData[0]?.menu_items}{" "}
+                        menuClassificationData[0]?.menu_count}{" "}
                       Menu Items
                     </Typography>
                   </Box>
@@ -416,7 +416,7 @@ const OurMenu = () => {
                                     }),
                                   }}
                                 >
-                                  {item?.menu_items} Menu Items
+                                  {item?.menu_count} Menu Items
                                 </Typography>
                               </Box>
                               <Box>
