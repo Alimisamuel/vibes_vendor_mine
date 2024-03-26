@@ -18,7 +18,7 @@ import { useSnackbar } from "notistack";
 import Loader from "../common/Loader";
 import { MdDone } from "react-icons/md";
 
-const AddTeam = ({action}) => {
+const AddTeam = ({ action }) => {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,7 +43,7 @@ const AddTeam = ({action}) => {
         if (data?.status) {
           setCreated(true);
           setData(data?.data);
-          action()
+          action();
         }
         setIsLoading(false);
       })
@@ -55,8 +55,10 @@ const AddTeam = ({action}) => {
   };
 
   const toggleDrawer = (newOpen) => () => {
+    setName("")
+    setEmail("")
     setOpen(newOpen);
-    setCreated(false)
+    setCreated(false);
   };
 
   const handleCopy = (text) => {

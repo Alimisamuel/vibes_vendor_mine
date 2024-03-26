@@ -69,7 +69,7 @@ const HouseRules = () => {
             House Rules{" "}
             <Info content="Establish dining rules to guide prospective guests on the best behavior at your establishment. Clarify expectations for a positive and enjoyable experience." />
           </Typography>
-          <NewRule />
+          <NewRule action={handleGetProfile} />
         </Box>
         {!data || data?.length === 0 ? (
           <Box

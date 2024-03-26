@@ -30,17 +30,22 @@ const style = {
   boxSizing: "border-box",
 };
 
-const NewRule = () => {
+const NewRule = ({action}) => {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const handleOpen = () => setOpen2(true);
-  const handleClose = () => setOpen2(false);
+  const handleClose = () => {
+    action()
+    setOpen(false)
+    setOpen2(false);}
   const [isLoading, setIsLoading] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState(false);
   const toggleDrawer = (newOpen) => () => {
+    setTitle("")
+    setDescription("")
     setOpen(newOpen);
   };
 
@@ -64,6 +69,7 @@ const NewRule = () => {
         setIsLoading(false);
         if (res?.data?.status) {
           setOpen2(true);
+
         }
       })
       .catch((err) => {
