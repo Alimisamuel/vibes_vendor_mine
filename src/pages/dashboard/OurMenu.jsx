@@ -545,7 +545,7 @@ const OurMenu = () => {
                             <>
                               {allMenu?.map((item, index) => (
                                 <>
-                                  <TableRow>
+                                  <TableRow >
                                     <TableCell sx={{ border: "none" }}>
                                       <Typography color="primary" sx={{fontWeight:500}}>
                                         {`${item?.name} - ${item?.
@@ -555,7 +555,7 @@ menu_count} Menu Items`}
                                   </TableRow>
                             {
                               item?.items.map((item, index)=>(
-                                      <TableRow key={index} sx={{ border: "none" }}>
+                                      <TableRow hover  key={index} sx={{ border: "none" }}>
                                     <TableCell sx={{ border: "none" }}>
                                       <Avatar
                                         src={item?.image}
@@ -803,7 +803,7 @@ menu_count} Menu Items`}
                           <TableBody>
                             <>
                               {menuClassData?.items?.map((item, index) => (
-                                <TableRow key={index} sx={{ border: "none" }}>
+                                <TableRow hover key={index} sx={{ border: "none" }}>
                                   <TableCell sx={{ border: "none" }}>
                                     <Avatar
                                       src={item?.image}
