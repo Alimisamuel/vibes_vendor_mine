@@ -7,19 +7,17 @@ import imgsvg2 from "../../assets/icons/signup.svg";
 import Loader from "../../components/common/Loader";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-
 const ResetSuccess = () => {
   const [open, setopen] = useState(false);
-  const navigate = useNavigate()
-const {variant} = useParams()
+  const navigate = useNavigate();
+  const { variant } = useParams();
 
+  const handleLogin = async () => {
+    navigate("/profile");
+  };
 
-  const handleLogin = async () =>{
-    navigate("/")
-  }
+  const isSuccess = variant === "success";
 
-  const isSuccess = variant === "success"
-  
   return (
     <>
       <Box
@@ -55,29 +53,30 @@ const {variant} = useParams()
             </Box>
 
             <Typography variant="h2" sx={{ mt: 4 }}>
-            {isSuccess ? "Password Successfully Updated!" : "Password Reset Done!"}
+              {isSuccess
+                ? "Password Successfully Updated!"
+                : "Password Reset Done!"}
             </Typography>
-            {
-                isSuccess ? (
-                    <Typography variant="body1" sx={{ mt: 2, textAlign: "center" }}>Proceed to Login page to access your account</Typography>
-                ):(
-                    <Typography variant="body1" sx={{ mt: 2, textAlign: "center" }}>
-                    Kindly check your email for a password reset link to setup a new 
-                      <br /> password for your profile..
-                    </Typography>
-                )
-            }
-          
+            {isSuccess ? (
+              <Typography variant="body1" sx={{ mt: 2, textAlign: "center" }}>
+                Proceed to Login page to access your account
+              </Typography>
+            ) : (
+              <Typography variant="body1" sx={{ mt: 2, textAlign: "center" }}>
+                Kindly check your email for a password reset link to setup a new
+                <br /> password for your profile..
+              </Typography>
+            )}
 
             <Box sx={{ mt: 5 }}>
-                <Link to="/login">
-              <Button
-              onClick={handleLogin}
-                variant="contained"
-                sx={{ height: "63px", width: "300px", borderRadius: "10px" }}
-              >
-              {isSuccess ? 'Login' : "Back to Login Page"}
-              </Button>
+              <Link to="/login">
+                <Button
+                  onClick={handleLogin}
+                  variant="contained"
+                  sx={{ height: "63px", width: "300px", borderRadius: "10px" }}
+                >
+                  {isSuccess ? "Login" : "Back to Login Page"}
+                </Button>
               </Link>
             </Box>
             <Box sx={{ mt: 8 }}>

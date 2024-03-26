@@ -130,8 +130,8 @@ const AddMenu = ({ selectData, action }) => {
         console.log(false);
         setOpen2(true);
         setOpen(false);
-        action();
-
+        // action();
+// setName("")
         setMaxGuestServing("");
         setUnitPrice("");
         setDescription("");
@@ -139,7 +139,7 @@ const AddMenu = ({ selectData, action }) => {
       .catch((err) => {
         setIsLoading(false);
         console.log(err);
-        handleAlert(`${err.message}`, "error");
+    handleAlert(`${err.response.data.message}`, "error");
       });
   };
 
@@ -454,7 +454,11 @@ const AddMenu = ({ selectData, action }) => {
                 mt: 4,
               }}
             >
-              <Button onClick={() => setOpen2(false)} sx={{}}>
+              <Button onClick={() => {
+                action()
+                setName("")
+                setOpen2(false)}
+                } sx={{}}>
                 <Typography color="error" sx={{ textDecoration: "underline" }}>
                   Close
                 </Typography>

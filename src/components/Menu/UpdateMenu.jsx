@@ -64,7 +64,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
       setUnitPrice(data?.unit_price);
       setMaxGuestServing(data?.max_guest_serving);
       setSelectedFileURL(data?.image);
-      setSelectedFile(data?.image);
+
       setId(data?.id);
     }
   }, [data]);
@@ -118,7 +118,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
       name,
       menu_class_id,
       max_guest_serving,
-      selectedFile,
+      selectedFile ? selectedFile : null,
       unit_price,
       description
     )
@@ -126,9 +126,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
         setIsLoading(false);
         console.log(false);
         setOpen2(true);
-
         action();
-
         setMaxGuestServing("");
         setUnitPrice("");
         setDescription("");
@@ -136,7 +134,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
       .catch((err) => {
         setIsLoading(false);
         console.log(err);
-        handleAlert(`${err.response.data.message}`, "error");
+        handleAlert(`${err?.response?.data?.message}`, "error");
       });
   };
   return (
@@ -432,7 +430,11 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
                 mt: 4,
               }}
             >
-              <Button onClick={() => setOpen2(false)} sx={{}}>
+              <Button onClick={() => {
+                setOpen2(false)
+              onClose()
+              action()
+              }} sx={{}}>
                 <Typography color="error" sx={{ textDecoration: "underline" }}>
                   Close
                 </Typography>

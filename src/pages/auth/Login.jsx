@@ -40,7 +40,7 @@ const Login = () => {
         if (data.status) {
           localStorage.setItem("vendorInfo", JSON.stringify(data?.data?.token));
           dispatch(setUser(data?.data));
-          navigate("/");
+          navigate("/profile");
         }
         console.log(res);
       })
