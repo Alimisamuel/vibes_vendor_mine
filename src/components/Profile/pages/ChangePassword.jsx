@@ -79,7 +79,7 @@ const ChangePassword = () => {
             light={true}
             otp={password}
             handleChange={handleChange}
-            type={true}
+         type={visible}
           />
           <IconButton onClick={() => setVisible(!visible)}>
             {visible ? (

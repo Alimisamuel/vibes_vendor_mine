@@ -16,7 +16,7 @@ import { useSnackbar } from "notistack";
 
 const Taxes = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [addedTax, setAddedTax] = useState(true);
+  const [addedTax, setAddedTax] = useState(false);
   const [consumptionTax, setConsumptionTax] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 

@@ -7,7 +7,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Skeleton
+  Skeleton,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import creditIcon from "../../../assets/icons/credit.svg";
@@ -16,6 +16,7 @@ import Loader from "../../common/Loader";
 import { MdInfoOutline } from "react-icons/md";
 import Info from "../../common/Info";
 import { getProflie } from "../../../api";
+import EmptyData from "../../common/EmptyData";
 
 const Revenue = () => {
   const [data, setData] = useState(null);
@@ -68,9 +69,7 @@ const Revenue = () => {
                     sx={{ fontWeight: 700, fontSize: "20px", mt: 0.5 }}
                     color="primary"
                   >
-       {data?.
-vibez_balance
-}
+                    {data?.vibez_balance}
                   </Typography>
                   <Button
                     variant="contained"
@@ -111,14 +110,14 @@ vibez_balance
                   >
                     Bank
                   </Typography>
-                  {!data?.account?.bank ? (
+                  {!data?.bank_name ? (
                     <Skeleton variant="typography" />
                   ) : (
                     <Typography
                       sx={{ fontWeight: 700, fontSize: "16px", mt: 0.5 }}
                       color="primary"
                     >
-                      {data?.account.bank} Bank
+                      {data?.bank_name} Bank
                     </Typography>
                   )}
                   <Typography
@@ -164,7 +163,7 @@ vibez_balance
                 >
                   Transaction History
                 </Typography>
-                <Table>
+                {/* <Table>
                   <TableBody>
                     <TableRow>
                       <TableCell>
@@ -231,7 +230,11 @@ vibez_balance
                       </TableCell>
                     </TableRow>
                   </TableBody>
-                </Table>
+                </Table> */}
+
+                <Box sx={{ height: "300px", mt: 5 }}>
+                  <EmptyData text="Currently, there are no records available for the transaction history" />
+                </Box>
               </Box>
             </Grid>
           </Grid>
