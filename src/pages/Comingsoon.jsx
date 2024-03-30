@@ -10,6 +10,7 @@ const Comingsoon = () => {
         className="not_found"
         sx={{
           height: "100vh",
+
           backgroundColor: "#FCEDFE",
           backgroundImage: `url('${bg}')`,
           backgroundSize: "contain",
