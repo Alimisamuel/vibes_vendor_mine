@@ -59,7 +59,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
   useEffect(() => {
     if (data) {
       setName(data?.name);
-      setMenuClassId(data?.menu_classification?.menu_class_id);
+      setMenuClassId(data?.menu_classification_id);
       setDescription(data?.description);
       setUnitPrice(data?.unit_price);
       setMaxGuestServing(data?.max_guest_serving);
@@ -68,8 +68,6 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
       setId(data?.id);
     }
   }, [data]);
-
-  
 
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(" ");
@@ -137,6 +135,12 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
         handleAlert(`${err?.response?.data?.message}`, "error");
       });
   };
+
+  const menu_classification_name = selectData?.find(
+    (item) => item.id === menu_class_id
+  );
+
+
   return (
     <>
       {isLoading && <Loader />}
@@ -163,7 +167,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
               variant="subtitle1"
               color="primary"
             >
-              Add New Menu Item
+              {isEdit ? "Edit Menu Item" : "Add New Menu Item"}
             </Typography>
             <IconButton onClick={onClose}>
               <img src={cancelIcon} />
@@ -196,12 +200,11 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
               </InputLabel>
 
               <TextField
+                readOnly
                 fullWidth
-                select
-                value={menu_class_id}
-                onChange={(e) => setMenuClassId(e.target.value)}
+                value={menu_classification_name?.name}
+ 
                 margin="dense"
-                placeholder="Enter Item Name"
                 InputProps={{
                   style: {
                     borderRadius: "10px",
@@ -209,18 +212,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
                     bgcolor: "#FCEDFE",
                   },
                 }}
-              >
-                {selectData?.map((item, index) => (
-                  <MenuItem
-                    key={index}
-                    value={item?.id}
-                    // onClick={() => setMenuClassId(item?.id)}
-                    sx={{ color: "#151515" }}
-                  >
-                    {item?.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+              />
             </Box>
             <Box sx={{ mt: 2 }}>
               <InputLabel sx={{ color: "#75007E", fontWeight: 500 }}>
@@ -422,7 +414,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
                 mt: 2,
               }}
             >
-              “{name}” has been successfully added as a Menu Item
+              Update Successfully Saved
             </Typography>
             <Box
               align="center"
@@ -430,11 +422,14 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
                 mt: 4,
               }}
             >
-              <Button onClick={() => {
-                setOpen2(false)
-              onClose()
-              action()
-              }} sx={{}}>
+              <Button
+                onClick={() => {
+                  setOpen2(false);
+                  onClose();
+                  action();
+                }}
+                sx={{}}
+              >
                 <Typography color="error" sx={{ textDecoration: "underline" }}>
                   Close
                 </Typography>

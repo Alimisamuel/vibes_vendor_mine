@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../Layouts/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import ProfileSidebar from "../../components/Profile/ProfileSidebar";
+import { getProflie } from "../../api";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../store/userSlice";
 
 const Profile = () => {
   const NAVWIDTH = 220;
+const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleEditProfile = async () => {
+await getProflie() .then((res) => {
+
+
+        console.log(res);
+      })
+      .catch((err) => {
+ if(err?.message === "Request failed with status code 401"){
+navigate("/login")
+dispatch(logoutUser)
+ }
+
+      });
+
+  }
+
+  useEffect(()=>{
+    handleEditProfile()
+  }, [])
   return (
     <>
       <Header

@@ -651,7 +651,7 @@ menu_count} Menu Items`}
                                         >
                                           Edit Menu Item
                                         </MenuItem>
-                                        {item?.delisted === false ? (
+                                        {item?.status === 1  ? (
                                           <MenuItem
                                             onClick={() => {
                                               handleDelist(editData?.id);

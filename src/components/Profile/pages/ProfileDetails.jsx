@@ -478,7 +478,7 @@ const ProfileDetails = () => {
               ))}
               {imageUrls.map((url, index) => (
                 <Grid item md="120px" key={index} sx={{}}>
-                  <ImageCard image={url} deleteAction={handleRemoveImage} />
+                  <ImageCard image={url} deleteAction={()=>handleRemoveImage(index)} />
                 </Grid>
               ))}
 
