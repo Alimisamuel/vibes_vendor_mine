@@ -34,6 +34,7 @@ const style = {
 
 const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
   const [isEdit, setIsEdit] = useState(false);
+  const [isEdited, setIsEdited] = useState("");
   useEffect(() => {
     if (edit) {
       setIsEdit(true);
@@ -42,10 +43,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open2, setOpen2] = useState(false);
-  const [name, setName] = useState("");
-  const [menu_class_id, setMenuClassId] = useState("");
-  const [max_guest_serving, setMaxGuestServing] = useState("");
-  const [unit_price, setUnitPrice] = useState("");
+
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -56,18 +54,50 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
     enqueueSnackbar(message, { variant });
   };
 
+  const [inputValues, setInputValues] = useState({
+    name: "",
+    menu_class_id: "",
+    description: "",
+    unit_price: "",
+    max_guest_serving: "",
+  });
+
+  const [originalValues, setOriginalValues] = useState({});
+
   useEffect(() => {
     if (data) {
-      setName(data?.name);
-      setMenuClassId(data?.menu_classification_id);
-      setDescription(data?.description);
-      setUnitPrice(data?.unit_price);
-      setMaxGuestServing(data?.max_guest_serving);
       setSelectedFileURL(data?.image);
 
       setId(data?.id);
+
+      const mockInitialValues = {
+        name: data?.name,
+        menu_class_id: data?.menu_classification_id,
+        description: data?.description,
+        unit_price: data?.unit_price,
+        max_guest_serving: data?.max_guest_serving,
+      };
+      setOriginalValues(mockInitialValues);
+      setInputValues(mockInitialValues);
     }
   }, [data]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+  console.log(inputValues);
+  const isModified = Object.keys(inputValues).some(
+    (key) => inputValues[key] !== originalValues[key]
+  );
+
+  const handleClose = () => {
+    onClose();
+  };
 
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(" ");
@@ -89,7 +119,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
     }
   };
 
-  const wordsArray = description.split(/\s+/);
+  const wordsArray = inputValues.description.split(/\s+/);
 
   const wordCount = wordsArray.length;
   useEffect(() => {
@@ -100,17 +130,15 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
     }
   }, [description]);
 
-  const handleChange = (event) => {
-    const newValue = event.target.value;
-
-    // Limit the input to 50 words
-    if (newValue.split(" ").length <= 50) {
-      setDescription(newValue);
-    }
-  };
-
   const handleEditItem = async () => {
     setIsLoading(true);
+    const {
+      name,
+      description,
+      menu_class_id,
+      unit_price,
+      max_guest_serving,
+    } = inputValues;
     await editMenuItem(
       id,
       name,
@@ -125,9 +153,6 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
         console.log(false);
         setOpen2(true);
         action();
-        setMaxGuestServing("");
-        setUnitPrice("");
-        setDescription("");
       })
       .catch((err) => {
         setIsLoading(false);
@@ -136,16 +161,12 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
       });
   };
 
-  const menu_classification_name = selectData?.find(
-    (item) => item.id === menu_class_id
-  );
-
-
   return (
     <>
       {isLoading && <Loader />}
-      <Drawer anchor="right" open={open} onClose={onClose}>
+      <Drawer anchor="right" open={open} onClose={handleClose}>
         <Box
+          className="hide_scrollbar"
           sx={{
             bgcolor: "#fff",
             height: "100vh",
@@ -169,7 +190,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
             >
               {isEdit ? "Edit Menu Item" : "Add New Menu Item"}
             </Typography>
-            <IconButton onClick={onClose}>
+            <IconButton onClick={handleClose}>
               <img src={cancelIcon} />
             </IconButton>
           </Box>
@@ -180,9 +201,10 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
               </InputLabel>
               <TextField
                 fullWidth
-                value={name}
+                name="name"
+                value={inputValues.name}
                 aria-readonly
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleInputChange}
                 margin="dense"
                 placeholder="Enter Item Name"
                 InputProps={{
@@ -199,11 +221,11 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
                 Menu Item Classification
               </InputLabel>
 
-              <TextField
+              {/* <TextField
                 readOnly
                 fullWidth
+           
                 value={menu_classification_name?.name}
- 
                 margin="dense"
                 InputProps={{
                   style: {
@@ -212,16 +234,45 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
                     bgcolor: "#FCEDFE",
                   },
                 }}
-              />
+              /> */}
+
+              <TextField
+                fullWidth
+                select
+                name="menu_class_id"
+                value={inputValues.menu_class_id}
+                onChange={handleInputChange}
+                margin="dense"
+                placeholder="Enter Item Name"
+                InputProps={{
+                  style: {
+                    borderRadius: "10px",
+                    border: "1px solid #75007e",
+                    bgcolor: "#FCEDFE",
+                  },
+                }}
+              >
+                {selectData?.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    value={item?.id}
+                    // onClick={() => setMenuClassId(item?.id)}
+                    sx={{ color: "#151515" }}
+                  >
+                    {item?.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Box>
             <Box sx={{ mt: 2 }}>
               <InputLabel sx={{ color: "#75007E", fontWeight: 500 }}>
                 Max Guest Serving
               </InputLabel>
               <TextField
+                name="max_guest_serving"
                 fullWidth
-                value={max_guest_serving}
-                onChange={(e) => setMaxGuestServing(e.target.value)}
+                value={inputValues.max_guest_serving}
+                onChange={handleInputChange}
                 margin="dense"
                 placeholder="Enter Item Name"
                 InputProps={{
@@ -300,8 +351,9 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
               </InputLabel>
               <TextField
                 fullWidth
-                value={unit_price}
-                onChange={(e) => setUnitPrice(e.target.value)}
+                name="unit_price"
+                value={inputValues.unit_price}
+                onChange={handleInputChange}
                 margin="dense"
                 placeholder="Enter Unit price"
                 InputProps={{
@@ -336,9 +388,10 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
               <TextField
                 fullWidth
                 margin="dense"
-                placeholder="Enter Unit price"
-                value={description}
-                onChange={handleChange}
+                name="description"
+                placeholder="Enter item description"
+                value={inputValues.description}
+                onChange={handleInputChange}
                 multiline
                 rows={7}
                 InputProps={{
@@ -378,6 +431,7 @@ const UpdateMenu = ({ open, onClose, edit, data, selectData, action }) => {
             {isEdit && (
               <Button
                 variant="contained"
+                disabled={!isModified || !selectedFile}
                 onClick={handleEditItem}
                 sx={{ px: 10, py: 2, borderRadius: 3 }}
               >

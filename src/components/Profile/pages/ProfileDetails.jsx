@@ -95,7 +95,6 @@ const ProfileDetails = () => {
 
   const [selectedFileURL, setSelectedFileURL] = useState(null);
 
-
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
@@ -110,21 +109,22 @@ const ProfileDetails = () => {
     }
   };
 
-
   const [imageUrls, setImageUrls] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const remainingPics = 10 - data?.images?.length;
 
-  console.log(imageUrls);
-
+  console.log(remainingPics);
   const handleImageChange = (e) => {
     const files = e.target.files;
 
+    const selectedFiles = Array.from(files).slice(0, remainingPics);
+
     // Update selectedImages state with the selected image files
-    setSelectedImages((prevImages) => [...prevImages, ...files]);
+    setSelectedImages((prevImages) => [...prevImages, ...selectedFiles]);
 
     // Read and store URLs of the selected images
     const urls = [];
-    for (const file of files) {
+    for (const file of selectedFiles) {
       const url = URL.createObjectURL(file);
       urls.push(url);
     }
@@ -471,14 +471,17 @@ const ProfileDetails = () => {
               <Info content="Upload up to 10 images of your restaurant or lounge for guests to experience your ambiance. For the best presentation, utilize images with a 750px by 750px aspect ratio." />
             </Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
-              {data?.images.map((image, index) => (
-                <Grid item md="120px" sx={{}}>
+              {data?.images?.map((image, index) => (
+                <Grid item md="120px" sx={{}} key={index}>
                   <ImageCard image={image.image} />
                 </Grid>
               ))}
               {imageUrls.map((url, index) => (
                 <Grid item md="120px" key={index} sx={{}}>
-                  <ImageCard image={url} deleteAction={()=>handleRemoveImage(index)} />
+                  <ImageCard
+                    image={url}
+                    deleteAction={() => handleRemoveImage(index)}
+                  />
                 </Grid>
               ))}
 
@@ -493,6 +496,10 @@ const ProfileDetails = () => {
                     height: "120px",
                     p: 0.5,
                     boxSizing: "border-box",
+                    ...(data?.images?.length + imageUrls?.length >= 10 && {
+                      opacity: 0.2,
+                      cursor: "not-allowed",
+                    }),
                   }}
                 >
                   <Box
@@ -520,6 +527,7 @@ const ProfileDetails = () => {
                       Click to add image
                     </Typography>
                     <input
+                      disabled={data?.images?.length + imageUrls?.length >= 10}
                       type="file"
                       ref={fileInputRef2}
                       style={{ display: "none" }}
@@ -584,10 +592,10 @@ const ProfileDetails = () => {
                 })}
               </Grid>
             </Box>
-            <Box sx={{ mt: 5 }}>
+            <Box align="left" sx={{ mt: 5 }}>
               <Button
                 variant="contained"
-                sx={{ px: 6 }}
+                sx={{ px: 6, py: 2, borderRadius: "10px" }}
                 onClick={handleEditProfile}
               >
                 Save Changes
