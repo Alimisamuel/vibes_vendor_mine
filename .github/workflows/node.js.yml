@@ -28,18 +28,14 @@ jobs:
         cache: 'npm'
     - name : Install Dependeces
       run: |
-        cd vibes_vendor_mine
         npm ci
     - name : Build the app
       run: |
-        cd vibes_vendor_mine
         npm run build
     - name : Run components test
       run: |
-        cd vibes_vendor_mine
         npm run test
     - name : Start the app
       run: |
-        cd vibes_vendor_mine
         npm start &
         npx wait-on --timeout 60000
